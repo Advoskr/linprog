@@ -23,13 +23,13 @@ namespace MsmSolver
             var basis = GetBasis(canonicalTask);
             var x0 = FormX0(basis, canonicalTask);
             var lambda = CalculateLambdas(canonicalTask, basis);
-            var deltas = CalculateDeltas(canonicalTask, basis, lambda);
+            
             var solverData = new TaskSolvingData()
             {
                 Basis = basis,
                 X0 = x0,
                 Lambda = lambda,
-                Deltas = deltas,
+                //Deltas = deltas,
             };
             var result = InternalSolve(canonicalTask, solverData);
             return result;
@@ -47,17 +47,22 @@ namespace MsmSolver
 
         protected virtual Answer InternalSolve(Task task, TaskSolvingData data)
         {
-            var canBeOptimized = GetCanBeOptimized(data.Deltas);
             var result = new Answer();
             TaskSolvingData newData = data;
-            while (canBeOptimized)
+            while (true)
             {
-                var incomingVectorIdx = FindIncomingVector(data);
-                var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx);
-                
-                newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, newData);
+                var deltas = CalculateDeltas(task, data.Basis, data.Lambda);
+                var canBeOptimized = GetCanBeOptimized(deltas);
+                if (!canBeOptimized)
+                    break;
 
-                canBeOptimized = GetCanBeOptimized(newData.Deltas);
+                var incomingVectorIdx = FindIncomingVector(deltas);
+                Vector Xs = data.Basis.Values * task.A.GetColumn(incomingVectorIdx);
+                var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, Xs);
+                //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
+                newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, Xs);
+
+                //canBeOptimized = GetCanBeOptimized(deltas);
                 result.StepCount++;
             }
             result.Basis = newData.Basis;
@@ -67,11 +72,11 @@ namespace MsmSolver
             return result;
         }
 
-        protected abstract TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, TaskSolvingData data);
+        protected abstract TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, Task task, TaskSolvingData data, Vector deltas, Vector Xs);
 
-        protected abstract int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx);
+        protected abstract int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx, Vector xs);
 
-        protected abstract int FindIncomingVector(TaskSolvingData data);
+        protected abstract int FindIncomingVector(Vector deltas);
 
         private bool GetCanBeOptimized(Vector deltas)
         {
@@ -88,7 +93,8 @@ namespace MsmSolver
 
         protected virtual Task MakeCanonicalForm(Task task)
         {
-            throw new NotImplementedException();
+            //Bug Implement Canonical Form 
+            return task;
         }
 
         public abstract string GetSolvingMethodName();

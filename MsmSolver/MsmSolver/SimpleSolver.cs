@@ -9,23 +9,85 @@ namespace MsmSolver
         {
         }
 
-        protected override TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, TaskSolvingData data)
+        //for optimization purposes
+        private static Vector _eVector = null;
+        private static Matrix E = null;
+        private static int _numvivodold = 0;
+        private static Vector _nullVector = null;
+
+        protected override TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, Task task, TaskSolvingData data, Vector deltas, Vector Xs)
         {
+            if(_eVector == null)
+                _eVector = new Vector(data.Basis.Values.ColCount);
+
+            if (E == null)
+                E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
+
+            if (_nullVector == null)
+                _nullVector = new Vector(data.Basis.Values.RowCount);
+
             var newData = new TaskSolvingData();
-            newData.VectorIndexes = data.VectorIndexes;
-            newData.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
-            throw new NotImplementedException();
-            //for (int i = 0; i < L.Dimension; i++)
+            
+            //recalc lambdas
+            for (int i = 0; i < data.Lambda.Dimension; i++)
+            {
+                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx, i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+            }
+
+            #region recalc Basis.
+            //вариант 2
+            for (int i = 0; i < E.RowCount; i++)
+            {
+                _eVector[i] = (i != outgoingVectorIdx) ? ((-1) * Xs[i]) / Xs[outgoingVectorIdx] : 1 / Xs[outgoingVectorIdx];
+            }
+            _nullVector[_numvivodold] = 1;
+            E.ChangeColumn(_numvivodold, _nullVector);
+            E.ChangeColumn(outgoingVectorIdx, _eVector);
+            _nullVector[_numvivodold] = 0;
+            _numvivodold = outgoingVectorIdx;
+            var newBasisValues = MultiplicationFunctor(data.Basis.Values, E);
+
+            newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
+            newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
+            newData.Basis.Values = newBasisValues;
+            //Bobr.Math_Mul(E);
+            //пересчет обр.баз.матр.
+            //вариант 1  
+            //for (int i = 0; i < Bobr.RowCount; i++)
+            //    for (int j = 0; j < Bobr.ColCount; j++)
+            //    {
+            //        Bobr[i, j] = (i != numvivod)
+            //                         ? Bobr[i, j] - (Bobr[numvivod, j]/Xs[numvivod])*Xs[i]
+            //                         : Bobr[i, j]/Xs[numvivod];
+            //    }
+            #endregion
+
+            //recalc solution vector
+            for (int i = 0; i < data.X0.Dimension; i++)
+            {
+                if (i != outgoingVectorIdx) data.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
+            }
+
+            //Z = 0;
+            ////дерьмо какое-то, разберись потом
+            //for (int i = 0; i < vectorsIndexes.Length; i++)
             //{
-            //    L[i] -= (Bobr[outgoingVectorIdx, i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+            //    Z += C[vectorsIndexes[i]] * X0[i];
             //}
 
             return newData;
         }
 
-        protected override int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx)
-        {
-            Vector Xs = data.Basis.Values * task.A.GetColumn(incomingVectorIdx);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="data"></param>
+        /// <param name="incomingVectorIdx"></param>
+        /// <param name="Xs">Components of outgoing vector by basis</param>
+        /// <returns></returns>
+        protected override int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx, Vector Xs)
+        {   
             //найдем минимум Хko/Xks и, т.о., выводимый вектор
             var outgoingVectorIdx = -1;
             double minimum = int.MaxValue;
@@ -42,11 +104,11 @@ namespace MsmSolver
             return outgoingVectorIdx;
         }
 
-        protected override int FindIncomingVector(TaskSolvingData data)
+        protected override int FindIncomingVector(Vector deltas)
         {
-            for (int i = 0; i < data.Deltas.Dimension; i++)
+            for (int i = 0; i < deltas.Dimension; i++)
             {
-                if (Math.Sign(data.Deltas[i]) == -1 && Math.Abs(data.Deltas[i]) > eps)
+                if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
                     return i;
             }
             return -1;
@@ -82,7 +144,7 @@ namespace MsmSolver
 
         protected override Vector FormX0(Basis basis, Task task)
         {
-            //TODO
+            //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
             Vector X0 = task.A0;//Разложение А0 по B,Потом разберусь
             return X0;
         }
