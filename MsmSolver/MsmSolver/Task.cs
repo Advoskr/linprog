@@ -8,5 +8,6 @@ namespace MsmSolver
     {
         public Matrix A { get; set; }
         public Vector C { get; set; }
+        public Vector A0 { get; set; }
     }
 }
