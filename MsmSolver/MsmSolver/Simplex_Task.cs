@@ -7,15 +7,9 @@ using System.IO;
 
 namespace MsmSolver
 {
-    public enum Signs
-    {
-        M_R, R, B_R
-    }
-
-    public enum Direction
-    {
-        Max, Min
-    }
+    /// <summary>
+    /// Old simple task
+    /// </summary>
     class Simplex_Task
     {
         public Vector C { get; protected set; }
@@ -24,9 +18,9 @@ namespace MsmSolver
 
         public Vector A0 { get; protected set; }
 
-        public Signs[] signs { get; protected set; }
+        public Signs[] Signs { get; protected set; }
 
-        public Direction direction { get; protected set; }
+        public Direction Direction { get; protected set; }
 
         public Simplex_Task()
         {
@@ -38,8 +32,8 @@ namespace MsmSolver
             this.C = c;
             this.A = a;
             this.A0 = a0;
-            this.signs = s;
-            this.direction = dir;
+            this.Signs = s;
+            this.Direction = dir;
         }
 
         public Simplex_Task ReadFromSmallFile(StreamReader streamReader)
@@ -72,8 +66,8 @@ namespace MsmSolver
             }
             result.C = new Vector(kolPerem);
             result.A0 = new Vector(kolOgran);
-            result.signs = new Signs[kolOgran];
-            result.direction = new Direction();
+            result.Signs = new Signs[kolOgran];
+            result.Direction = new Direction();
 
             while (line != null)
             {
@@ -89,16 +83,16 @@ namespace MsmSolver
                 if (line.ToUpper() == "$CF")
                 {
                     if (streamReader.ReadLine().ToUpper() == "MAX")
-                        result.direction = Direction.Max;
+                        result.Direction = Direction.Max;
                     else
-                        result.direction = Direction.Min;
+                        result.Direction = Direction.Min;
                 }
 
                 if (isReadingOgrans)
                 {
                     if (line.Contains("<="))
                     {
-                        result.signs[ogranNumber] = Signs.M_R;
+                        result.Signs[ogranNumber] = MsmSolver.Signs.M_R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("<=") + 2));
                         line = line.Remove(line.IndexOf("<="), line.Length - line.IndexOf("<="));
                         vals = line.Split(' ');
@@ -111,7 +105,7 @@ namespace MsmSolver
 
                     if (line.Contains(">="))
                     {
-                        result.signs[ogranNumber] = Signs.B_R;
+                        result.Signs[ogranNumber] = MsmSolver.Signs.B_R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf(">=") + 2));
                         line = line.Remove(line.IndexOf(">="), line.Length - line.IndexOf(">="));
                         vals = line.Split(' ');
@@ -124,7 +118,7 @@ namespace MsmSolver
 
                     if (line.Contains("="))
                     {
-                        result.signs[ogranNumber] = Signs.R;
+                        result.Signs[ogranNumber] = MsmSolver.Signs.R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("=") + 2));
                         line = line.Remove(line.IndexOf("="), line.Length - line.IndexOf("="));
                         vals = line.Split(' ');
