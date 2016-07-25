@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Answer.cs" />
     <Compile Include="Basis.cs" />
+    <Compile Include="SimpleSolver.cs" />
     <Compile Include="SolverBase.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

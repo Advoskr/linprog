@@ -8,6 +8,13 @@ namespace MsmSolver
 {
     public abstract class SolverBase
     {
+        public SolverBase(Func<Matrix, Matrix, Matrix> multiplicationFunctor)
+        {
+            MultiplicationFunctor = multiplicationFunctor;
+        }
+
+        protected Func<Matrix, Matrix, Matrix> MultiplicationFunctor { get; private set; }
+
         public Answer SolveTask(Task task)
         {
             //recreate task to get canonical form without <= / >=
@@ -23,7 +30,6 @@ namespace MsmSolver
                 X0 = x0,
                 Lambda = lambda,
                 Deltas = deltas,
-                
             };
             var result = InternalSolve(canonicalTask, solverData);
             return result;
@@ -39,16 +45,16 @@ namespace MsmSolver
             return result;
         }
 
-        protected virtual Answer InternalSolve(Task canonicalTask, TaskSolvingData data)
+        protected virtual Answer InternalSolve(Task task, TaskSolvingData data)
         {
             var canBeOptimized = GetCanBeOptimized(data.Deltas);
             var result = new Answer();
             TaskSolvingData newData = data;
             while (canBeOptimized)
             {
+                var incomingVectorIdx = FindIncomingVector(data);
+                var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx);
                 
-                var outgoingVectorIdx = FindOutgoingVector();
-                var incomingVectorIdx = FindIncomingVector();
                 newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, newData);
 
                 canBeOptimized = GetCanBeOptimized(newData.Deltas);
@@ -57,33 +63,30 @@ namespace MsmSolver
             result.Basis = newData.Basis;
             result.Solution = newData.X0;
             result.SolvingMethod = GetSolvingMethodName();
-            result.Z = CalculateZ(canonicalTask, newData);
+            result.Z = CalculateZ(task, newData);
             return result;
         }
 
-        private TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, TaskSolvingData data)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, TaskSolvingData data);
 
-        protected abstract int FindOutgoingVector();
+        protected abstract int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx);
 
-        protected abstract int FindIncomingVector();
+        protected abstract int FindIncomingVector(TaskSolvingData data);
 
         private bool GetCanBeOptimized(Vector deltas)
         {
             return deltas.Value.Any(t => t < 0.0);
         }
 
-        protected abstract Vector CalculateDeltas(Task canonicalTask, Basis basis, Vector lambda);
+        protected abstract Vector CalculateDeltas(Task canonicalTask, Basis basis, Vector lambdas);
 
-        protected abstract Vector CalculateLambdas(Task canonicalTask, Basis basis);
+        protected abstract Vector CalculateLambdas(Task task, Basis basis);
 
-        protected abstract Vector FormX0(Basis basis, Task canonicalTask);
+        protected abstract Vector FormX0(Basis basis, Task task);
 
         protected abstract Basis GetBasis(Task task);
 
-        private Task MakeCanonicalForm(Task task)
+        protected virtual Task MakeCanonicalForm(Task task)
         {
             throw new NotImplementedException();
         }
