@@ -44,7 +44,7 @@
     <Compile Include="MathClasses\Basis.cs" />
     <Compile Include="MathClasses\Direction.cs" />
     <Compile Include="MathClasses\Signs.cs" />
-    <Compile Include="Solvers\Simplex_Task.cs" />
+    <Compile Include="Misc\TaskReader.cs" />
     <Compile Include="Solvers\SimpleSolver.cs" />
     <Compile Include="BaseClasses\SolverBase.cs" />
     <Compile Include="MathClasses\Matrix.cs" />
