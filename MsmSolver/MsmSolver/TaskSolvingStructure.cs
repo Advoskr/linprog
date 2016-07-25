@@ -9,7 +9,6 @@ namespace MsmSolver
         public Vector Deltas { get; set; }
         public Vector Lambda { get; set; }
         public Vector X0 { get; set; }
-        public double Z { get; set; }
         /// <summary>
         /// Indexes of basis variables
         /// </summary>

@@ -25,8 +25,6 @@ namespace MsmSolver
                 Deltas = deltas,
                 
             };
-            //TODO Ugly, rethink. Z is part of an answer, not solving data.
-            solverData.Z = CalculateZ(canonicalTask, solverData);
             var result = InternalSolve(canonicalTask, solverData);
             return result;
         }
@@ -45,14 +43,21 @@ namespace MsmSolver
         {
             var canBeOptimized = GetCanBeOptimized(data.Deltas);
             var result = new Answer();
+            TaskSolvingData newData = data;
             while (canBeOptimized)
             {
+                
                 var outgoingVectorIdx = FindOutgoingVector();
                 var incomingVectorIdx = FindIncomingVector();
-                var newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, data);
+                newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, newData);
 
                 canBeOptimized = GetCanBeOptimized(newData.Deltas);
+                result.StepCount++;
             }
+            result.Basis = newData.Basis;
+            result.Solution = newData.X0;
+            result.SolvingMethod = GetSolvingMethodName();
+            result.Z = CalculateZ(canonicalTask, newData);
             return result;
         }
 
@@ -82,5 +87,7 @@ namespace MsmSolver
         {
             throw new NotImplementedException();
         }
+
+        public abstract string GetSolvingMethodName();
     }
 }
