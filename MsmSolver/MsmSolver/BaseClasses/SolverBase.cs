@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MsmSolver.Strategies;
 
 namespace MsmSolver
 {
     public abstract class SolverBase
     {
-        public SolverBase(Func<Matrix, Matrix, Matrix> multiplicationFunctor)
-        {
-            MultiplicationFunctor = multiplicationFunctor;
-        }
+        public IMathOperationsProvider MathOperationsProvider { get; private set; }
 
-        protected Func<Matrix, Matrix, Matrix> MultiplicationFunctor { get; private set; }
+        public SolverBase(IMathOperationsProvider mathOperationsProvider)
+        {
+            MathOperationsProvider = mathOperationsProvider;
+        }
 
         public Answer SolveTask(Task task)
         {
@@ -57,10 +58,10 @@ namespace MsmSolver
                     break;
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
-                Vector Xs = data.Basis.Values * task.A.GetColumn(incomingVectorIdx);
-                var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, Xs);
+                Vector xs = data.Basis.Values * task.A.GetColumn(incomingVectorIdx);
+                var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
                 //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
-                newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, Xs);
+                newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, xs);
 
                 //canBeOptimized = GetCanBeOptimized(deltas);
                 result.StepCount++;
@@ -82,12 +83,25 @@ namespace MsmSolver
         {
             return deltas.Value.Any(t => t < 0.0);
         }
+        
+        protected abstract Vector CalculateDeltas(Task task, Basis basis, Vector lambdas);
 
-        protected abstract Vector CalculateDeltas(Task canonicalTask, Basis basis, Vector lambdas);
+        protected Vector CalculateLambdas(Task task, Basis basis)
+        {
+            Vector L = new Vector(basis.Values.ColCount);
+            for (int i = 0; i < basis.VectorIndexes.Length; i++)
+            {
+                L[i] = task.C[basis.VectorIndexes[i]];
+            }
+            return L;
+        }
 
-        protected abstract Vector CalculateLambdas(Task task, Basis basis);
-
-        protected abstract Vector FormX0(Basis basis, Task task);
+        protected Vector FormX0(Basis basis, Task task)
+        {
+            //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
+            Vector X0 = task.A0;//Разложение А0 по B,Потом разберусь
+            return X0;
+        }
 
         protected abstract Basis GetBasis(Task task);
 
@@ -103,10 +117,9 @@ namespace MsmSolver
                 {
                     counter++;
                 }
-
             }
 
-            double[][]Avals = new double[task.A.RowCount][]; // Будущая матрица result.A;
+            var Avals = new double[task.A.RowCount][]; // Будущая матрица result.A;
             result.A0 = new Vector(task.A0.Dimension);
             result.C = new Vector(task.A.ColCount + task.A.RowCount - counter); 
             result.Direction = new Direction();
