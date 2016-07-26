@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using MsmSolver.Strategies;
 
 namespace MsmSolver
 {
     public class SimpleSolver : SolverBase
     {
-        public SimpleSolver(Func<Matrix, Matrix, Matrix> multiplicationFunctor) : base(multiplicationFunctor)
+
+        public SimpleSolver(IMathOperationsProvider mathOperationsProvider) : base(mathOperationsProvider)
         {
         }
 
@@ -45,7 +47,7 @@ namespace MsmSolver
             E.ChangeColumn(outgoingVectorIdx, _eVector);
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
-            var newBasisValues = MultiplicationFunctor(data.Basis.Values, E);
+            var newBasisValues = MathOperationsProvider.Multiply(data.Basis.Values, E);
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
@@ -104,6 +106,7 @@ namespace MsmSolver
             return outgoingVectorIdx;
         }
 
+        protected const double eps = 1e-7d;
         protected override int FindIncomingVector(Vector deltas)
         {
             for (int i = 0; i < deltas.Dimension; i++)
@@ -114,31 +117,23 @@ namespace MsmSolver
             return -1;
         }
 
-
-        private const double eps = 1e-7d;
         protected override Vector CalculateDeltas(Task task, Basis basis, Vector lambdas)
         {
             var deltas = new Vector(task.C.Dimension);
+            //can be parallel?
             for (int i = 0; i < deltas.Dimension; i++)
             {
                 //TODO Replace with "multiply" call
+                deltas[i] =
                 deltas[i] = lambdas * task.A.GetColumn(i) - task.C[i];
-                
-                if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
-                {
-                    break;
-                }
-            }
-            return deltas;
-        }
 
-        protected override Vector CalculateLambdas(Task task, Basis basis)
-        {
-            Vector L = new Vector(basis.Values.ColCount);
-            for (int i = 0; i < basis.VectorIndexes.Length; i++)
-            {
-                L[i] = task.C[basis.VectorIndexes[i]];
+                ////small optimization - break if negative delta found.
+                //if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
+                //{
+                //    break;
+                //}
             }
+<<<<<<< HEAD
             return L;
         }
 
@@ -147,11 +142,15 @@ namespace MsmSolver
             //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
             Vector X0 = basis.Values*task.A0;//Разложение А0 по B,Потом разберусь
             return X0;
+=======
+            return deltas;
+>>>>>>> origin/master
         }
-
+        
         protected override Basis GetBasis(Task task)
         {
             //TODO WE make identity matrix here.
+<<<<<<< HEAD
             // Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
             // Vector eVector = new Vector(E.ColCount);
             // return new Basis()
@@ -191,6 +190,16 @@ namespace MsmSolver
             //        throw new Exception("Basis not found");
             return basis;
                 
+=======
+            Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
+            //Vector eVector = new Vector(E.ColCount);
+            return new Basis()
+            {
+                Values = E,
+                //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
+                VectorIndexes = Enumerable.Range(0,task.A.ColCount).ToArray()
+            };
+>>>>>>> origin/master
         }
 
     
@@ -200,6 +209,7 @@ namespace MsmSolver
             return "Modified Simplex Method";
         }
 
+<<<<<<< HEAD
 
     /*    private bool TryGetCanonicalBasis(Matrix bobr, int[] indexes)
         {
@@ -227,5 +237,7 @@ namespace MsmSolver
             }
             return (bobr.ColCount == indexesIdx);
         }*/
+=======
+>>>>>>> origin/master
     }
 }
