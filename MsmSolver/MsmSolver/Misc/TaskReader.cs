@@ -1,47 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
-namespace MsmSolver
+namespace MsmSolver.Misc
 {
-    /// <summary>
-    /// Old simple task
-    /// </summary>
-    class Simplex_Task
+    public class TaskReader
     {
-        public Vector C { get; protected set; }
-
-        public Matrix A { get; protected set; }
-
-        public Vector A0 { get; protected set; }
-
-        public Signs[] Signs { get; protected set; }
-
-        public Direction Direction { get; protected set; }
-
-        public Simplex_Task()
-        {
-
-        }
-
-        public Simplex_Task(Vector c, Matrix a, Vector a0, Signs[] s, Direction dir)
-        {
-            this.C = c;
-            this.A = a;
-            this.A0 = a0;
-            this.Signs = s;
-            this.Direction = dir;
-        }
-
-        public Simplex_Task ReadFromSmallFile(StreamReader streamReader)
+        public Task ReadFromSmallFile(StreamReader streamReader)
         {
             int kolOgran = 0, kolPerem = 0;
             int ogranNumber = 0;
 
-            var result = new Simplex_Task();
+            var result = new Task();
 
             bool isReadingOgrans = false;
 
@@ -60,7 +33,7 @@ namespace MsmSolver
             }
 
             double[][] Avals = new double[kolOgran][];
-            for(int i = 0; i < kolOgran; i++)
+            for (int i = 0; i < kolOgran; i++)
             {
                 Avals[i] = new double[kolPerem];
             }
@@ -92,7 +65,7 @@ namespace MsmSolver
                 {
                     if (line.Contains("<="))
                     {
-                        result.Signs[ogranNumber] = MsmSolver.Signs.M_R;
+                        result.Signs[ogranNumber] = Signs.M_R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("<=") + 2));
                         line = line.Remove(line.IndexOf("<="), line.Length - line.IndexOf("<="));
                         vals = line.Split(' ');
@@ -105,7 +78,7 @@ namespace MsmSolver
 
                     if (line.Contains(">="))
                     {
-                        result.Signs[ogranNumber] = MsmSolver.Signs.B_R;
+                        result.Signs[ogranNumber] = Signs.B_R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf(">=") + 2));
                         line = line.Remove(line.IndexOf(">="), line.Length - line.IndexOf(">="));
                         vals = line.Split(' ');
@@ -118,7 +91,7 @@ namespace MsmSolver
 
                     if (line.Contains("="))
                     {
-                        result.Signs[ogranNumber] = MsmSolver.Signs.R;
+                        result.Signs[ogranNumber] = Signs.R;
                         result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("=") + 2));
                         line = line.Remove(line.IndexOf("="), line.Length - line.IndexOf("="));
                         vals = line.Split(' ');
@@ -139,5 +112,6 @@ namespace MsmSolver
 
             return result;
         }
+
     }
 }
