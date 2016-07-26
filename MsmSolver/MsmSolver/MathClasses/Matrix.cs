@@ -94,7 +94,7 @@ namespace MsmSolver
         protected void Initialize(double[][] val)
         {
             RowCount = val.GetLength(0);
-            ColCount = val.GetLength(1);
+            ColCount = val[0].GetLength(0);
             _values = val;
             //_values = new double[RowCount, ColCount];
             Array.Copy(val, 0, _values, 0, _values.Length);
