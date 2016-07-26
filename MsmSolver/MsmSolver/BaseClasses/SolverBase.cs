@@ -91,10 +91,91 @@ namespace MsmSolver
 
         protected abstract Basis GetBasis(Task task);
 
-        protected virtual Task MakeCanonicalForm(Task task)
+        public virtual Task MakeCanonicalForm(Task task)
         {
-            //Bug Implement Canonical Form 
-            return task;
+            var result = new Task();
+
+            int counter = 0; //  Сколько ограничений, где не нужна искусственная переменная
+
+            for (int i = 0; i < task.Signs.Length; i++)
+            {
+                if (task.Signs[i] == Signs.R)
+                {
+                    counter++;
+                }
+
+            }
+
+            double[][]Avals = new double[task.A.RowCount][]; // Будущая матрица result.A;
+            result.A0 = new Vector(task.A0.Dimension);
+            result.C = new Vector(task.A.ColCount + task.A.RowCount - counter); 
+            result.Direction = new Direction();
+            result.Signs = new Signs[task.A.RowCount];
+
+            
+            for (int i = 0; i < task.A.RowCount; i++)                   
+            {
+               Avals[i] = new double[task.A.ColCount + task.A.RowCount - counter];
+            }
+            int count = 0; // счётчик текущего кол-ва равенств, чтобы знать, в какую позицию тыкать 1 или -1;
+
+            for (int i = 0; i < task.A.RowCount; i++)
+            {
+                if (task.Signs[i] == Signs.R)
+                {
+                    count++;
+                }
+                result.A0[i] = task.A0[i];
+                result.Signs[i] = Signs.R;
+
+                for (int j = 0; j < task.A.ColCount + task.A.RowCount - counter; j++)
+                {
+                    if (j < task.A.ColCount)
+                    {
+                        Avals[i][j] = task.A[i][j];
+                    }
+
+                    else
+                    {
+                        if (task.Signs[i] == Signs.R) { Avals[i][j] = 0; }
+                        if (task.Signs[i] == Signs.M_R && j != task.A.ColCount + i - count)
+                        { Avals[i][j] = 0; }
+                        if (task.Signs[i] == Signs.M_R && j == task.A.ColCount + i - count)
+                        { Avals[i][j] = 1; }
+                        if (task.Signs[i] == Signs.B_R && j != task.A.ColCount + i - count)
+                        { Avals[i][j] = 0; }
+                        if (task.Signs[i] == Signs.B_R && j == task.A.ColCount + i - count)
+                        { Avals[i][j] = -1; }
+                    }
+                }
+            }
+
+            result.A = new Matrix(Avals);
+
+            if (task.Direction == (Direction)0)
+            {
+                result.Direction = (Direction)0;
+                for (int i = 0; i < task.A.ColCount + task.A.RowCount - counter; i++)
+                {
+                    if (i <= task.A.ColCount)
+                        result.C[i] = task.C[i];
+                    else
+                        result.C[i] = 0;
+                }
+            }
+            else
+            {
+                result.Direction = (Direction)0;
+                for (int i = 0; i < task.A.ColCount + task.A.RowCount - counter; i++)
+                {
+                    if (i <= task.A.ColCount)
+                        result.C[i] = -task.C[i];
+                    else
+                        result.C[i] = 0;
+                }
+            }
+
+            return result;
         }
 
         public abstract string GetSolvingMethodName();
