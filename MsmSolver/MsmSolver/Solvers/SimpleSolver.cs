@@ -153,12 +153,12 @@ namespace MsmSolver
         {
             //TODO WE make identity matrix here.
             Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
-            Vector eVector = new Vector(E.ColCount);
+            //Vector eVector = new Vector(E.ColCount);
             return new Basis()
             {
                 Values = E,
                 //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
-                VectorIndexes = Enumerable.Range(0,task.A.ColCount).Select(t=>t).ToArray()
+                VectorIndexes = Enumerable.Range(0,task.A.ColCount).ToArray()
             };
         }
 
