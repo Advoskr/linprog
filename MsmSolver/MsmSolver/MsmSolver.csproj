@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseClasses\Answer.cs" />
+    <Compile Include="BaseClasses\ModularSolver.cs" />
     <Compile Include="MathClasses\Basis.cs" />
     <Compile Include="MathClasses\Direction.cs" />
     <Compile Include="MathClasses\Signs.cs" />
@@ -52,6 +53,22 @@
     <Compile Include="BaseClasses\Task.cs" />
     <Compile Include="BaseClasses\TaskSolvingStructure.cs" />
     <Compile Include="MathClasses\Vector.cs" />
+    <Compile Include="Strategies\Implementations\CanonicalInitialBasisFinder.cs" />
+    <Compile Include="Strategies\Implementations\FirstIncomingVectorFinder.cs" />
+    <Compile Include="Strategies\Implementations\FullParallelDeltasCalculator.cs" />
+    <Compile Include="Strategies\IInitialBasisFinder.cs" />
+    <Compile Include="Strategies\IDeltasCalculator.cs" />
+    <Compile Include="Strategies\IIncomingVectorFinder.cs" />
+    <Compile Include="Strategies\IMathOperationsProvider.cs" />
+    <Compile Include="Strategies\IOutgoingVectorFinder.cs" />
+    <Compile Include="Strategies\IVectorToBasisPutter.cs" />
+    <Compile Include="Strategies\Implementations\LazyDeltasCalculator.cs" />
+    <Compile Include="BaseClasses\SolverStepData.cs" />
+    <Compile Include="Strategies\Implementations\SingleCoreMathOperationsProvider.cs" />
+    <Compile Include="Strategies\Implementations\StraightVectorToBasisPutter.cs" />
+    <Compile Include="Strategies\Implementations\LexicographicalOutgoingVectorFinder.cs" />
+    <Compile Include="Strategies\Implementations\SimpleOutgoingVectorFinder.cs" />
+    <Compile Include="Strategies\Implementations\LastIncomingVectorFinder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
