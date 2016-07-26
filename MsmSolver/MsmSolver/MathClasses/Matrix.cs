@@ -91,7 +91,7 @@ namespace MsmSolver
         {
         }
 
-        protected void Initialize(double[][] val)
+        public void Initialize(double[][] val)
         {
             RowCount = val.GetLength(0);
             ColCount = val[0].GetLength(0);

@@ -145,26 +145,87 @@ namespace MsmSolver
         protected override Vector FormX0(Basis basis, Task task)
         {
             //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
-            Vector X0 = task.A0;//Разложение А0 по B,Потом разберусь
+            Vector X0 = basis.Values*task.A0;//Разложение А0 по B,Потом разберусь
             return X0;
         }
 
         protected override Basis GetBasis(Task task)
         {
             //TODO WE make identity matrix here.
-            Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
-            Vector eVector = new Vector(E.ColCount);
-            return new Basis()
+            // Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
+            // Vector eVector = new Vector(E.ColCount);
+            // return new Basis()
+            //{
+            //    Values = E,
+            //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
+            //    VectorIndexes = Enumerable.Range(0,task.A.ColCount).Select(t=>t).ToArray()
+            //  };
+            Basis basis = new Basis();
+            basis.Values = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
+            basis.VectorIndexes = new int[basis.Values.ColCount];
+
+            bool isBasis = false;
+            int indexesIdx = 0;
+            for (int j = 0; j < task.A.ColCount; j++)
             {
-                Values = E,
-                //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
-                VectorIndexes = Enumerable.Range(0,task.A.ColCount).Select(t=>t).ToArray()
-            };
+                for (int i = 0; i < task.A.RowCount; i++)
+                {
+                    if (task.A[i][j] != 1 && task.A[i][j] != 0) { isBasis = false; break; }
+                    if (task.A[i][j] == 1)
+                    {
+                        if (isBasis)
+                        { isBasis = false; break; }
+                        isBasis = true;
+                    }
+                }
+                if (isBasis)
+                {
+                    basis.Values.ChangeColumn(indexesIdx, task.A.GetColumn(j));
+                    basis.VectorIndexes[indexesIdx++] = j;
+                    isBasis = false;
+                }
+            }
+
+
+            //    if (indexesIdx != basis.VectorIndexes.Length - 1)
+            //        throw new Exception("Basis not found");
+            return basis;
+                
         }
+
+    
 
         public override string GetSolvingMethodName()
         {
             return "Modified Simplex Method";
         }
+
+
+    /*    private bool TryGetCanonicalBasis(Matrix bobr, int[] indexes)
+        {
+            bool isBasis = false;
+            int indexesIdx = 0;
+            for (int j = 0; j < A.ColCount; j++)
+            {
+                for (int i = 0; i < A.RowCount; i++)
+                {
+                    if (A[i, j] != 1 && A[i, j] != 0) { isBasis = false; break; }
+                    if (A[i, j] == 1)
+                    {
+                        if (isBasis)
+                        { isBasis = false; break; }
+                        isBasis = true;
+                    }
+                }
+                if (isBasis)
+                {
+                    bobr.ChangeColumn(indexesIdx, A.GetColumn(j));
+                    indexes[indexesIdx++] = j;
+                    isBasis = false;
+                }
+
+            }
+            return (bobr.ColCount == indexesIdx);
+        }*/
     }
 }

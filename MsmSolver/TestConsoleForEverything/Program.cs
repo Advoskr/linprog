@@ -15,8 +15,18 @@ namespace TestConsoleForEverything
         static void Main(string[] args)
         {
             var z = new Task();
-            z = new TaskReader().ReadFromSmallFile(new StreamReader(@"C:\Program Files (x86)\ChetKiyUir\MSM\Additional_Files\Zadacha_100x100(1).txt"));
-            z = new SimpleSolver(MultiplyMatricesParallel).MakeCanonicalForm(z);
+            z = new TaskReader().ReadFromSmallFile(new StreamReader(@"C:\Program Files (x86)\ChetKiyUir\MSM\Additional_Files\Jenia.txt"));
+            SimpleSolver ss = new SimpleSolver(MultiplyMatricesParallel);
+
+            z = ss.MakeCanonicalForm(z);
+
+            Answer answer = ss.SolveTask(z);
+
+
+
+         
+
+            
 
             Console.ReadLine();
         }
