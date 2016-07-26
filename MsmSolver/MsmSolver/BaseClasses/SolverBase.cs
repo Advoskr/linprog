@@ -99,7 +99,7 @@ namespace MsmSolver
 
             for (int i = 0; i < task.Signs.Length; i++)
             {
-                if (task.Signs[i] == (Signs)1)
+                if (task.Signs[i] == Signs.R)
                 {
                     counter++;
                 }
@@ -121,12 +121,12 @@ namespace MsmSolver
 
             for (int i = 0; i < task.A.RowCount; i++)
             {
-                if (task.Signs[i] == (Signs)1)
+                if (task.Signs[i] == Signs.R)
                 {
                     count++;
                 }
                 result.A0[i] = task.A0[i];
-                result.Signs[i] = (Signs)1;
+                result.Signs[i] = Signs.R;
 
                 for (int j = 0; j < task.A.ColCount + task.A.RowCount - counter; j++)
                 {
