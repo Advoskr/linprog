@@ -16,7 +16,7 @@ namespace TestConsoleForEverything
         static void Main(string[] args)
         {
             var z = new Task();
-            z = new TaskReader().ReadFromSmallFile(new StreamReader(@"C:\Program Files (x86)\ChetKiyUir\MSM\Additional_Files\Jenia.txt"));
+            z = new TaskReader().ReadFromSmallFile(new StreamReader(@"Jenia.txt"));
             var mp = new SingleCoreMathOperationsProvider();
             SimpleSolver ss = new SimpleSolver(mp);
 

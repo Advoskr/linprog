@@ -33,13 +33,18 @@ namespace MsmSolver
             newData.Basis = new Basis();
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
-            
-            //recalc lambdas
-            for (int i = 0; i < data.Lambda.Dimension; i++)
-            {
-                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
-            }
 
+            //recalc lambdas
+            //for (int i = 0; i < data.Lambda.Dimension; i++)
+            //{
+            //    newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+            //}
+            Vector L = new Vector(data.Basis.Values.ColCount);
+            for (int i = 0; i < data.Basis.VectorIndexes.Length; i++)
+            {
+                L[i] = task.C[data.Basis.VectorIndexes[i]]*;
+            }
+            newData.Lambda = L;
             #region recalc Basis.
             //вариант 2
             for (int i = 0; i < E.RowCount; i++)
@@ -51,7 +56,7 @@ namespace MsmSolver
             E.ChangeColumn(outgoingVectorIdx, _eVector);
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
-            var newBasisValues = MathOperationsProvider.Multiply(data.Basis.Values, E);
+            var newBasisValues = MathOperationsProvider.Multiply(E, data.Basis.Values);
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
@@ -68,13 +73,15 @@ namespace MsmSolver
             //    }
             #endregion
 
-          //  recalc solution vector
-              for (int i = 0; i < newData.X0.Dimension; i++)
-               {
-                 if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
-              }
+            //  recalc solution vector
+            newData.X0 = MathOperationsProvider.Multiply(newData.Basis.Values, data.X0);
 
-            
+            //for (int i = 0; i < newData.X0.Dimension; i++)
+            //{
+            //    if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
+            //}
+
+
             //Z = 0;
             ////дерьмо какое-то, разберись потом
             //for (int i = 0; i < vectorsIndexes.Length; i++)
@@ -128,15 +135,7 @@ namespace MsmSolver
             //can be parallel?
             for (int i = 0; i < deltas.Dimension; i++)
             {
-                //TODO Replace with "multiply" call
-                deltas[i] =
                 deltas[i] = lambdas * task.A.GetColumn(i) - task.C[i];
-
-                ////small optimization - break if negative delta found.
-                //if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
-                //{
-                //    break;
-                //}
             }
             return deltas;
         }
