@@ -21,9 +21,8 @@ namespace TestConsoleForEverything
             SimpleSolver ss = new SimpleSolver(mp);
 
             var answer = ss.SolveTask(z);
-
-            Console.WriteLine("Solution: " + answer.Z);
-
+            Console.WriteLine("Solution: " + answer.Solution);
+            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
             Console.ReadLine();
         }
 

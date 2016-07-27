@@ -33,12 +33,28 @@ namespace MsmSolver
             newData.Basis = new Basis();
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
+
             
+
+
             //recalc lambdas
             for (int i = 0; i < data.Lambda.Dimension; i++)
             {
                 newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+        
             }
+
+
+
+            /*for (int i = 0; i < L.Dimension; i++)
+            {
+                L[i] -= (Bobr[numvivod, i] / Xs[numvivod]) * deltas[numvvod];
+            }*/
+
+
+         //   var C_B = C_bazis(task, data.Basis);
+         //   newData.Lambda = C_B * data.Basis.Values;
+
 
             #region recalc Basis.
             //вариант 2
@@ -51,11 +67,12 @@ namespace MsmSolver
             E.ChangeColumn(outgoingVectorIdx, _eVector);
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
-            var newBasisValues = MathOperationsProvider.Multiply(data.Basis.Values, E);
+            var newBasisValues = MathOperationsProvider.Multiply(E, data.Basis.Values);
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
+
             //Bobr.Math_Mul(E);
             //пересчет обр.баз.матр.
             //вариант 1  
@@ -68,11 +85,12 @@ namespace MsmSolver
             //    }
             #endregion
 
-          //  recalc solution vector
-              for (int i = 0; i < newData.X0.Dimension; i++)
-               {
-                 if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
-              }
+            //    recalc solution vector
+            //   for (int i = 0; i < newData.X0.Dimension; i++)
+            //    {
+            //     if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
+            //   }
+            newData.X0 = newData.Basis.Values * task.A0;
 
             
             //Z = 0;
@@ -104,11 +122,25 @@ namespace MsmSolver
                 var newMin = data.X0[k] / Xs[k];
                 if (newMin < minimum && Xs[k] > 0)
                 {
+                    //  outgoingVectorIdx = data.Basis.VectorIndexes[k]; 
                     outgoingVectorIdx = k;
                     minimum = newMin;
                 }
             }
             return outgoingVectorIdx;
+        }
+
+        protected Vector C_bazis(Task task, Basis basis)
+        {
+            var result = new Vector(basis.VectorIndexes.Length);
+
+            for (int i = 0; i < result.Dimension; i++)
+            {
+                result[i] = task.C[basis.VectorIndexes[i]];
+            }
+
+            return result;
+
         }
 
         protected const double eps = 1e-7d;
@@ -129,7 +161,12 @@ namespace MsmSolver
             for (int i = 0; i < deltas.Dimension; i++)
             {
                 //TODO Replace with "multiply" call
-                deltas[i] =
+              /*  if (basis.VectorIndexes.Contains<int>(i))
+                {
+                    deltas[i] = 0;
+                    continue;
+                }*/
+
                 deltas[i] = lambdas * task.A.GetColumn(i) - task.C[i];
 
                 ////small optimization - break if negative delta found.

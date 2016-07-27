@@ -58,6 +58,7 @@ namespace MsmSolver
                 if (!canBeOptimized)
                     break;
 
+
                 var incomingVectorIdx = FindIncomingVector(deltas);
                 Vector xs = newData.Basis.Values * task.A.GetColumn(incomingVectorIdx);
                 var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
@@ -65,7 +66,9 @@ namespace MsmSolver
                 newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, xs);
 
                 //canBeOptimized = GetCanBeOptimized(deltas);
-                result.StepCount++;
+
+                Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount)); 
+                result.StepCount++;                                         // посколько outgoingVectorIdx - строка, а не номер вектора
             }
             result.Basis = newData.Basis;
             result.Solution = newData.X0;
