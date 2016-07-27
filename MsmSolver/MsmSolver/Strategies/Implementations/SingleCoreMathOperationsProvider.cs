@@ -70,12 +70,28 @@ namespace MsmSolver.Strategies
 
         public Vector Multiply(Vector left, Matrix right)
         {
-            throw new System.NotImplementedException();
+            double[] res = new double[right.ColCount];
+            for (int i = 0; i < right.ColCount; i++)
+            {
+                for (int j = 0; j < left.Dimension; j++)
+                {
+                    res[i] += left[j] * right.Values[j][i];
+                }
+            }
+            return new Vector(res);
         }
 
         public Vector Multiply(Matrix left, Vector right)
         {
-            throw new System.NotImplementedException();
+            double[] res = new double[left.RowCount];
+            for (int i = 0; i < left.RowCount; i++)
+            {
+                for (int j = 0; j < right.Dimension; j++)
+                {
+                    res[i] += left[i, j] * right[j];
+                }
+            }
+            return new Vector(res);
         }
     }
 }
