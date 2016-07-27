@@ -34,15 +34,17 @@ namespace MsmSolver
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
 
-            
+            for (int i = 0; i < data.Lambda.Dimension; i++)
+            {
+                newData.Lambda[i] -= (newData.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+
+            }
+
+
 
 
             //recalc lambdas
-            for (int i = 0; i < data.Lambda.Dimension; i++)
-            {
-                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
-        
-            }
+
 
 
 
@@ -52,8 +54,8 @@ namespace MsmSolver
             }*/
 
 
-         //   var C_B = C_bazis(task, data.Basis);
-         //   newData.Lambda = C_B * data.Basis.Values;
+            //   var C_B = C_bazis(task, data.Basis);
+            //   newData.Lambda = C_B * data.Basis.Values;
 
 
             #region recalc Basis.
@@ -72,6 +74,8 @@ namespace MsmSolver
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
+
+
 
             //Bobr.Math_Mul(E);
             //пересчет обр.баз.матр.
