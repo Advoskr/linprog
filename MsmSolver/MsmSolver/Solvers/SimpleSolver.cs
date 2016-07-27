@@ -29,11 +29,15 @@ namespace MsmSolver
                 _nullVector = new Vector(data.Basis.Values.RowCount);
 
             var newData = new TaskSolvingData();
+
+            newData.Basis = new Basis();
+            newData.X0 = new Vector(data.X0.Dimension);
+            newData.Lambda = new Vector(data.Lambda.Dimension);
             
             //recalc lambdas
             for (int i = 0; i < data.Lambda.Dimension; i++)
             {
-                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx, i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
             }
 
             #region recalc Basis.
@@ -64,12 +68,13 @@ namespace MsmSolver
             //    }
             #endregion
 
-            //recalc solution vector
-            for (int i = 0; i < data.X0.Dimension; i++)
-            {
-                if (i != outgoingVectorIdx) data.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
-            }
+          //  recalc solution vector
+              for (int i = 0; i < newData.X0.Dimension; i++)
+               {
+                 if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
+              }
 
+            
             //Z = 0;
             ////дерьмо какое-то, разберись потом
             //for (int i = 0; i < vectorsIndexes.Length; i++)
@@ -139,14 +144,18 @@ namespace MsmSolver
         protected override Basis GetBasis(Task task)
         {
             //TODO WE make identity matrix here.
-            Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
+            // Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
             //Vector eVector = new Vector(E.ColCount);
-            return new Basis()
-            {
-                Values = E,
-                //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
-                VectorIndexes = Enumerable.Range(0,task.A.ColCount).ToArray()
-            };
+            // return new Basis()
+            //  {
+            //    Values = E,
+            //    //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
+            //    VectorIndexes = Enumerable.Range(0,task.A.ColCount).ToArray()
+            //};
+
+            CanonicalInitialBasisFinder cf = new CanonicalInitialBasisFinder();
+            var result = cf.GetInitialBasis(task);
+            return result;
         }
 
         public override string GetSolvingMethodName()

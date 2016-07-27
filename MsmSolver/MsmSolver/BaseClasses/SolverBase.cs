@@ -49,16 +49,17 @@ namespace MsmSolver
         protected virtual Answer InternalSolve(Task task, TaskSolvingData data)
         {
             var result = new Answer();
-            TaskSolvingData newData = data;
+            TaskSolvingData newData = new TaskSolvingData();
+            newData = data;
             while (true)
             {
-                var deltas = CalculateDeltas(task, data.Basis, data.Lambda);
+                var deltas = CalculateDeltas(task, newData.Basis, newData.Lambda);
                 var canBeOptimized = GetCanBeOptimized(deltas);
                 if (!canBeOptimized)
                     break;
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
-                Vector xs = data.Basis.Values * task.A.GetColumn(incomingVectorIdx);
+                Vector xs = newData.Basis.Values * task.A.GetColumn(incomingVectorIdx);
                 var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
                 //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
                 newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, xs);
@@ -99,7 +100,7 @@ namespace MsmSolver
         protected Vector FormX0(Basis basis, Task task)
         {
             //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
-            Vector X0 = task.A0;//Разложение А0 по B,Потом разберусь
+            Vector X0 = basis.Values*task.A0;//Разложение А0 по B,Потом разберусь
             return X0;
         }
 
