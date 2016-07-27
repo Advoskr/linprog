@@ -28,13 +28,11 @@
 
             var newData = new TaskSolvingData();
 
-            //recalc lambdas
-            for (int i = 0; i < data.Lambda.Dimension; i++)
-            {
-                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx, i] / xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
-            }
+            newData.Basis = new Basis();
+            newData.X0 = new Vector(data.X0.Dimension);
+            newData.Lambda = new Vector(data.Lambda.Dimension);
 
-            #region recalc Basis.
+            // recalc Basis.
             //вариант 2
             for (int i = 0; i < E.RowCount; i++)
             {
@@ -45,28 +43,34 @@
             E.ChangeColumn(outgoingVectorIdx, _eVector);
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
-            var newBasisValues = _provider.Multiply(data.Basis.Values, E);
+            var newBasisValues = _provider.Multiply(E, data.Basis.Values);
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
-            
-            #endregion
 
-            //recalc solution vector
-            for (int i = 0; i < data.X0.Dimension; i++)
-            {
-                if (i != outgoingVectorIdx) data.X0[i] -= (data.X0[outgoingVectorIdx] / xs[outgoingVectorIdx]) * xs[i];
-            }
+            //  recalc solution vector
+            newData.X0 = _provider.Multiply(newData.Basis.Values, task.A0);
 
-            //Z = 0;
-            ////дерьмо какое-то, разберись потом
-            //for (int i = 0; i < vectorsIndexes.Length; i++)
-            //{
-            //    Z += C[vectorsIndexes[i]] * X0[i];
-            //}
+            //recalc Lambdas
+            newData.Lambda = _provider.Multiply(GetCbazis(task, newData.Basis), newData.Basis.Values);
 
             return newData;
         }
+
+
+        protected Vector GetCbazis(Task task, Basis basis)
+        {
+            var result = new Vector(basis.VectorIndexes.Length);
+
+            for (int i = 0; i < result.Dimension; i++)
+            {
+                result[i] = task.C[basis.VectorIndexes[i]];
+            }
+
+            return result;
+
+        }
+
     }
 }

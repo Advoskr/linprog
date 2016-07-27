@@ -15,23 +15,28 @@ namespace TestConsoleForEverything
     {
         static void Main(string[] args)
         {
+            //SolveWithSimpleSolver();
+            var answer = ModularSolverCaller("Jenia.txt");
+            Console.WriteLine("Solution: " + answer.Solution);
+            Console.WriteLine("z: " + answer.Z);
+            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
+            Console.ReadLine();
+        }
+
+        private static void SolveWithSimpleSolver()
+        {
             var z = new Task();
             z = new TaskReader().ReadFromSmallFile(new StreamReader(@"Jenia.txt"));
             var mp = new SingleCoreMathOperationsProvider();
             SimpleSolver ss = new SimpleSolver(mp);
 
             var answer = ss.SolveTask(z);
-
-            Console.WriteLine("Solution: " + answer.Z);
-
-            Console.ReadLine();
+            Console.WriteLine("Solution: " + answer.Solution);
+            Console.WriteLine("z: " + answer.Z);
+            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
         }
 
-
-
-
-
-        public void ModularSolverCaller(string taskFile)
+        public static Answer ModularSolverCaller(string taskFile)
         {
             Task z;
             using (var reader = new StreamReader(taskFile))
@@ -42,7 +47,7 @@ namespace TestConsoleForEverything
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider), 
                 new FirstIncomingVectorFinder(), new CanonicalInitialBasisFinder(), new SimpleOutgoingVectorFinder())
                 .SolveTask(z);
-            Console.WriteLine("Solution: "+answer.Solution);
+            return answer;
         }
 
         public static Matrix MultiplyMatricesParallel(Matrix matA, Matrix matB)
