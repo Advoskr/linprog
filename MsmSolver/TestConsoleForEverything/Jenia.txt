@@ -1,0 +1,13 @@
+$OGRAN
+4
+$PEREM
+2
+$CF
+Max
+FUNCTION
+9 8
+OGRAN
+1 2<=51
+3 3<=99
+1 0<=18
+0 1<=19
