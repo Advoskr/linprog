@@ -41,7 +41,7 @@ namespace MsmSolver.Strategies
                 //else, we continue to check A matrix. 
 
             }
-            if(indexesIdx!=basis.VectorIndexes.Length-1)
+            if(indexesIdx!=basis.VectorIndexes.Length)
                 throw new Exception("Basis wasn't found correctly");
             return basis;
         }
