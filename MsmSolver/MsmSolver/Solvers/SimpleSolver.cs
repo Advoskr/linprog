@@ -33,30 +33,8 @@ namespace MsmSolver
             newData.Basis = new Basis();
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
-
             
-
-
-            //recalc lambdas
-            for (int i = 0; i < data.Lambda.Dimension; i++)
-            {
-                newData.Lambda[i] -= (data.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
-        
-            }
-
-
-
-            /*for (int i = 0; i < L.Dimension; i++)
-            {
-                L[i] -= (Bobr[numvivod, i] / Xs[numvivod]) * deltas[numvvod];
-            }*/
-
-
-         //   var C_B = C_bazis(task, data.Basis);
-         //   newData.Lambda = C_B * data.Basis.Values;
-
-
-            #region recalc Basis.
+            // recalc Basis.
             //вариант 2
             for (int i = 0; i < E.RowCount; i++)
             {
@@ -72,33 +50,12 @@ namespace MsmSolver
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
-
-            //Bobr.Math_Mul(E);
-            //пересчет обр.баз.матр.
-            //вариант 1  
-            //for (int i = 0; i < Bobr.RowCount; i++)
-            //    for (int j = 0; j < Bobr.ColCount; j++)
-            //    {
-            //        Bobr[i, j] = (i != numvivod)
-            //                         ? Bobr[i, j] - (Bobr[numvivod, j]/Xs[numvivod])*Xs[i]
-            //                         : Bobr[i, j]/Xs[numvivod];
-            //    }
-            #endregion
-
-            //    recalc solution vector
-            //   for (int i = 0; i < newData.X0.Dimension; i++)
-            //    {
-            //     if (i != outgoingVectorIdx) newData.X0[i] -= (data.X0[outgoingVectorIdx] / Xs[outgoingVectorIdx]) * Xs[i];
-            //   }
-            newData.X0 = newData.Basis.Values * task.A0;
-
             
-            //Z = 0;
-            ////дерьмо какое-то, разберись потом
-            //for (int i = 0; i < vectorsIndexes.Length; i++)
-            //{
-            //    Z += C[vectorsIndexes[i]] * X0[i];
-            //}
+            //  recalc solution vector
+            newData.X0 = MathOperationsProvider.Multiply(newData.Basis.Values, task.A0);
+            
+            //recalc Lambdas
+            newData.Lambda = MathOperationsProvider.Multiply(GetCbazis(task, newData.Basis), newData.Basis.Values);
 
             return newData;
         }
@@ -130,7 +87,7 @@ namespace MsmSolver
             return outgoingVectorIdx;
         }
 
-        protected Vector C_bazis(Task task, Basis basis)
+        protected Vector GetCbazis(Task task, Basis basis)
         {
             var result = new Vector(basis.VectorIndexes.Length);
 
@@ -160,20 +117,12 @@ namespace MsmSolver
             //can be parallel?
             for (int i = 0; i < deltas.Dimension; i++)
             {
-                //TODO Replace with "multiply" call
-              /*  if (basis.VectorIndexes.Contains<int>(i))
-                {
-                    deltas[i] = 0;
-                    continue;
-                }*/
+                //{
+                //    deltas[i] = 0;
+                //    continue;
+                //}
 
                 deltas[i] = lambdas * task.A.GetColumn(i) - task.C[i];
-
-                ////small optimization - break if negative delta found.
-                //if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
-                //{
-                //    break;
-                //}
             }
             return deltas;
         }
