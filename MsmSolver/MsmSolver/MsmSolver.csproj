@@ -45,6 +45,7 @@
     <Compile Include="MathClasses\Basis.cs" />
     <Compile Include="MathClasses\Direction.cs" />
     <Compile Include="MathClasses\Signs.cs" />
+    <Compile Include="Misc\CoreExstensions.cs" />
     <Compile Include="Misc\TaskReader.cs" />
     <Compile Include="Solvers\SimpleSolver.cs" />
     <Compile Include="BaseClasses\SolverBase.cs" />
@@ -54,12 +55,14 @@
     <Compile Include="BaseClasses\TaskSolvingStructure.cs" />
     <Compile Include="MathClasses\Vector.cs" />
     <Compile Include="Strategies\Implementations\CanonicalInitialBasisFinder.cs" />
+    <Compile Include="Strategies\Implementations\CudaMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\FirstIncomingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\FullParallelDeltasCalculator.cs" />
     <Compile Include="Strategies\IInitialBasisFinder.cs" />
     <Compile Include="Strategies\IDeltasCalculator.cs" />
     <Compile Include="Strategies\IIncomingVectorFinder.cs" />
     <Compile Include="Strategies\IMathOperationsProvider.cs" />
+    <Compile Include="Strategies\Implementations\MulticoreCoreMathOperationsProvider.cs" />
     <Compile Include="Strategies\IOutgoingVectorFinder.cs" />
     <Compile Include="Strategies\IVectorToBasisPutter.cs" />
     <Compile Include="Strategies\Implementations\LazyDeltasCalculator.cs" />

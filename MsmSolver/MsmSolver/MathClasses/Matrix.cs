@@ -24,7 +24,7 @@ namespace MsmSolver
             set { _values = value; }
         }
 
-        private double[][] _values;
+        public double[][] _values;
 
         public double this[int index1, int index2]
         {
@@ -87,11 +87,11 @@ namespace MsmSolver
             Initialize(val);
         }
 
-        protected Matrix()
+        public Matrix()
         {
         }
 
-        protected void Initialize(double[][] val)
+        public void Initialize(double[][] val)
         {
             RowCount = val.GetLength(0);
             ColCount = val[0].GetLength(0);
@@ -132,34 +132,7 @@ namespace MsmSolver
         //    _values = vC;
         //}
 
-        public static Matrix operator *(Matrix a, Matrix b)
-        {
-            if (a.ColCount == b.RowCount)
-            {
-                Matrix res = new Matrix();
-                double[][] val = new double[a.RowCount][];
-                for (int i = 0; i < a.RowCount; i++)
-                {
-                    val[i] = new double[b.ColCount];
-                }
-                
-                for (int i = 0; i < a.RowCount; i++)
-                {
-                    for (int j = 0; j < b.ColCount; j++)
-                    {
-                        for (int k = 0; k < a.ColCount; k++)
-                        {
-                            val[i][j] += a._values[i][k] * b._values[k][j];
-                        }
-                    }
-                }
-                res.Initialize(val);
-                return res;
-            }
-            else throw new Exception("Wrong matrix dimensions");
-        }
-
-        public static Matrix MultiplyMatricesParallel(Matrix matA, Matrix matB)
+    /*    public static Matrix MultiplyMatricesParallel(Matrix matA, Matrix matB)
         {
             if (matA.ColCount == matB.RowCount)
             {
@@ -193,34 +166,8 @@ namespace MsmSolver
                 return res;
             }
             else throw new Exception("Wrong matrix dimensions");
-        }
+        }*/
 
         //интересно, нам на "направление" вектора срать?)))
-        public static Vector operator *(Vector left, Matrix right)
-        {
-            double[] res = new double[right.ColCount];
-            for (int i = 0; i < right.ColCount; i++)
-            {
-                for (int j = 0; j < left.Dimension; j++)
-                {
-                    res[i] += left[j] * right._values[j][i];
-                }
-            }
-            return new Vector(res);
-        }
-
-        public static Vector operator *(Matrix left, Vector right)
-        {
-            double[] res = new double[left.RowCount];
-            for (int i = 0; i < left.RowCount; i++)
-            {
-                for (int j = 0; j < right.Dimension; j++)
-                {
-                    res[i] += left[i, j] * right[j];
-                }
-            }
-            return new Vector(res);
-        }
-
     }
 }

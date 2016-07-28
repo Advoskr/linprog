@@ -34,11 +34,11 @@ namespace MsmSolver
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
             
-            for (int i = 0; i < data.Lambda.Dimension; i++)
-            {
-                newData.Lambda[i] -= (newData.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+         //  for (int i = 0; i < data.Lambda.Dimension; i++)
+          //  {
+          //      newData.Lambda[i] -= (newData.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
 
-            }
+         //   }
 
             //вариант 2
             for (int i = 0; i < E.RowCount; i++)
