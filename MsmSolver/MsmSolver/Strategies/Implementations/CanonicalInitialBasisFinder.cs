@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace MsmSolver.Strategies
 {
@@ -14,6 +15,7 @@ namespace MsmSolver.Strategies
             int indexesIdx = 0;
             for (int j = 0; j < task.A.ColCount; j++)
             {
+                int k = 0;
                 for (int i = 0; i < task.A.RowCount; i++)
                 {
                     // not identity matrix, so this cannot be canonical basis.
@@ -25,10 +27,17 @@ namespace MsmSolver.Strategies
                         if (isBasis)
                         { isBasis = false; break; }
                         //this row wasn't basis one, but now it is. 
+                        k = i;
                         isBasis = true;
                     }
                 }
                 //checked row. Now, if it's basis, we go to this block.
+                for (int i = 0; i < task.A.ColCount; i++)
+                {
+                    if (basis.VectorIndexes.Contains(i) && task.A[k][i] == task.A[k][j])
+                    { isBasis = false; break; }
+                }
+                
                 if (isBasis)
                 {
                     //A has an identity vector in it, so we can copy it to out bobr. It'll guarantee that 1 is in correct position.

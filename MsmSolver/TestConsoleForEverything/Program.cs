@@ -18,15 +18,24 @@ namespace TestConsoleForEverything
      public static List<double> Jenia = new List<double>(5);
         static void Main(string[] args)
         {
+            var z = new Task();
+            z = new TaskReader().ReadFromSmallFile(new StreamReader("Jenia.txt"));
+            SimpleSolver ss = new SimpleSolver(new SingleCoreMathOperationsProvider());
+
+            z = ss.MakeCanonicalForm(z);
+            z = new CreationMTask().MTask(z);
+
+            Console.ReadLine();
 
 
-            for (int i = 0; i < 5; i++)
-            {
 
-                var answer = ModularSolverCaller("Zadacha 300x300.txt");
-            }
+            //  for (int i = 0; i < 5; i++)
+            // {
 
-            Console.WriteLine(Jenia.Average());
+            //    var answer = ModularSolverCaller("Zadacha 300x300.txt");
+            //  }
+
+            // Console.WriteLine(Jenia.Average());
             // Console.WriteLine("Time:{0}", sw.Elapsed.TotalMilliseconds);
             //Console.WriteLine("Solution: " + answer.Solution);
             //Console.WriteLine("z: " + answer.Z);
@@ -34,6 +43,8 @@ namespace TestConsoleForEverything
             // Console.ReadLine();
 
             // SolveWithSimpleSolver();
+
+
 
         }
 

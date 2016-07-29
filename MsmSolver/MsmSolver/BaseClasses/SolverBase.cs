@@ -195,7 +195,6 @@ namespace MsmSolver
 
             return result;
         }
-
         public abstract string GetSolvingMethodName();
     }
 }
