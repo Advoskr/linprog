@@ -55,17 +55,11 @@
     <Compile Include="BaseClasses\TaskSolvingStructure.cs" />
     <Compile Include="MathClasses\Vector.cs" />
     <Compile Include="Strategies\Implementations\MTaskBasisFinder.cs" />
-    <Compile Include="Strategies\Implementations\CanonicalInitialBasisFinder.cs" />
+    <Compile Include="Strategies\Implementations\CanonicalAdditionalTaskHandler.cs" />
     <Compile Include="Strategies\Implementations\CudaMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\FirstIncomingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\FullParallelDeltasCalculator.cs" />
-    <Compile Include="Strategies\IInitialBasisFinder.cs" />
-    <Compile Include="Strategies\IDeltasCalculator.cs" />
-    <Compile Include="Strategies\IIncomingVectorFinder.cs" />
-    <Compile Include="Strategies\IMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\MulticoreCoreMathOperationsProvider.cs" />
-    <Compile Include="Strategies\IOutgoingVectorFinder.cs" />
-    <Compile Include="Strategies\IVectorToBasisPutter.cs" />
     <Compile Include="Strategies\Implementations\LazyDeltasCalculator.cs" />
     <Compile Include="BaseClasses\SolverStepData.cs" />
     <Compile Include="Strategies\Implementations\SingleCoreMathOperationsProvider.cs" />
@@ -73,6 +67,12 @@
     <Compile Include="Strategies\Implementations\LexicographicalOutgoingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\SimpleOutgoingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\LastIncomingVectorFinder.cs" />
+    <Compile Include="Strategies\Interfaces\IDeltasCalculator.cs" />
+    <Compile Include="Strategies\Interfaces\IIncomingVectorFinder.cs" />
+    <Compile Include="Strategies\Interfaces\IAdditionalTaskHandler.cs" />
+    <Compile Include="Strategies\Interfaces\IMathOperationsProvider.cs" />
+    <Compile Include="Strategies\Interfaces\IOutgoingVectorFinder.cs" />
+    <Compile Include="Strategies\Interfaces\IVectorToBasisPutter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

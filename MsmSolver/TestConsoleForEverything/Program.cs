@@ -25,7 +25,7 @@ namespace TestConsoleForEverything
             z = ss.MakeCanonicalForm(z);
             z = new MTaskBasisFinder().MTask(z);
 
-          //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
+          //  Basis basis = new CanonicalAdditionalTaskHandler().GetInitialBasis(z);
 
             Console.ReadLine();
 
@@ -78,7 +78,7 @@ namespace TestConsoleForEverything
             var mathProvider = new MulticoreCoreMathOperationsProvider();
             var sw = Stopwatch.StartNew();
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider), 
-                new FirstIncomingVectorFinder(), new CanonicalInitialBasisFinder(), new SimpleOutgoingVectorFinder())
+                new FirstIncomingVectorFinder(), new CanonicalAdditionalTaskHandler(), new SimpleOutgoingVectorFinder())
                 .SolveTask(z);
             sw.Stop();
             Jenia.Add(sw.Elapsed.TotalMilliseconds);

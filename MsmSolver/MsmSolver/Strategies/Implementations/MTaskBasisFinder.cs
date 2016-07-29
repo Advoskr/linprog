@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MsmSolver.Strategies
 {
-   public class MTaskBasisFinder : IInitialBasisFinder
+   public class MTaskBasisFinder : IAdditionalTaskHandler
     {
-        public Task MTask(Task task)
+        public Task FormAdditionalTask(Task task)
         {
             var result = new Task();
             Basis basis = new Basis(); // локальный базис, нужен для определения базисных векторов в задаче в каноническом виде
@@ -122,7 +122,12 @@ namespace MsmSolver.Strategies
             return result;
         }
 
-        public static bool Proverka(int[] Jenia) // проверка на кол-во нулевый элементов массива basis.VectorIndexes
+       public Answer AnalyzeAnswer(Answer answer, SolverBase solver)
+       {
+           throw new NotImplementedException();
+       }
+
+       public static bool Proverka(int[] Jenia) // проверка на кол-во нулевый элементов массива basis.VectorIndexes
         {
             bool TestPerem = false;
 
