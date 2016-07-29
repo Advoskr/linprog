@@ -54,7 +54,7 @@
     <Compile Include="BaseClasses\Task.cs" />
     <Compile Include="BaseClasses\TaskSolvingStructure.cs" />
     <Compile Include="MathClasses\Vector.cs" />
-    <Compile Include="Strategies\Implementations\CreationMTask.cs" />
+    <Compile Include="Strategies\Implementations\MTaskBasisFinder.cs" />
     <Compile Include="Strategies\Implementations\CanonicalInitialBasisFinder.cs" />
     <Compile Include="Strategies\Implementations\CudaMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\FirstIncomingVectorFinder.cs" />

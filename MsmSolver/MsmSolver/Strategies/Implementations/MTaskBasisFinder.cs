@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MsmSolver.Strategies
 {
-   public class CreationMTask
+   public class MTaskBasisFinder : IInitialBasisFinder
     {
         public Task MTask(Task task)
         {
@@ -18,7 +18,7 @@ namespace MsmSolver.Strategies
            
             result.A0 = new Vector(task.A0.Dimension);
             
-            result.Direction = new Direction();
+            result.Direction = Direction.Max;
             result.Signs = new Signs[task.A.RowCount];
 
             bool inBasis = false; // есть ли такое вектор в базисе
@@ -195,7 +195,9 @@ namespace MsmSolver.Strategies
         }*/
 
 
-
-
+       public Basis GetInitialBasis(Task task)
+       {
+           throw new NotImplementedException();
+       }
     }
 }

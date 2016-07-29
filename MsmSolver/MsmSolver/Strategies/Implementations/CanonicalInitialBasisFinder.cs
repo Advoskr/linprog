@@ -34,7 +34,7 @@ namespace MsmSolver.Strategies
                 //checked row. Now, if it's basis, we go to this block.
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
-                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && CreationMTask.Proverka(basis.VectorIndexes))
+                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && MTaskBasisFinder.Proverka(basis.VectorIndexes))
                     { isBasis = false; break; }
                 }
                 

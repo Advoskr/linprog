@@ -23,7 +23,7 @@ namespace TestConsoleForEverything
             SimpleSolver ss = new SimpleSolver(new SingleCoreMathOperationsProvider());
 
             z = ss.MakeCanonicalForm(z);
-            z = new CreationMTask().MTask(z);
+            z = new MTaskBasisFinder().MTask(z);
 
             Console.ReadLine();
 
