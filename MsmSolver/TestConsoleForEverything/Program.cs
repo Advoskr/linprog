@@ -25,6 +25,8 @@ namespace TestConsoleForEverything
             z = ss.MakeCanonicalForm(z);
             z = new CreationMTask().MTask(z);
 
+          //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
+
             Console.ReadLine();
 
 
