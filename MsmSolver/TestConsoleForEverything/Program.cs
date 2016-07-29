@@ -8,45 +8,78 @@ using MsmSolver;
 using MsmSolver.Misc;
 using MsmSolver.Strategies;
 using Task = MsmSolver.Task;
+using System.Diagnostics;
+
 
 namespace TestConsoleForEverything
 {
     class Program
     {
+     public static List<double> Jenia = new List<double>(5);
         static void Main(string[] args)
         {
-            //SolveWithSimpleSolver();
-            var answer = ModularSolverCaller("Jenia.txt");
+            var z = new Task();
+            z = new TaskReader().ReadFromSmallFile(new StreamReader("Jenia.txt"));
+            SimpleSolver ss = new SimpleSolver(new SingleCoreMathOperationsProvider());
+
+            z = ss.MakeCanonicalForm(z);
+            z = new CreationMTask().MTask(z);
+
+            Console.ReadLine();
+
+
+
+            //  for (int i = 0; i < 5; i++)
+            // {
+
+            //    var answer = ModularSolverCaller("Zadacha 300x300.txt");
+            //  }
+
+            // Console.WriteLine(Jenia.Average());
+            // Console.WriteLine("Time:{0}", sw.Elapsed.TotalMilliseconds);
+            //Console.WriteLine("Solution: " + answer.Solution);
+            //Console.WriteLine("z: " + answer.Z);
+            //Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
+            // Console.ReadLine();
+
+            // SolveWithSimpleSolver();
+
+
+
+        }
+
+        private static void SolveWithSimpleSolver()
+        {
+            var z = new Task();
+            z = new TaskReader().ReadFromSmallFile(new StreamReader("Zadacha 300x300.txt"));
+            var mp = new SingleCoreMathOperationsProvider();
+            SimpleSolver ss = new SimpleSolver(mp);
+
+
+            var answer = ss.SolveTask(z);
+
+
             Console.WriteLine("Solution: " + answer.Solution);
             Console.WriteLine("z: " + answer.Z);
             Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
             Console.ReadLine();
         }
 
-        private static void SolveWithSimpleSolver()
-        {
-            var z = new Task();
-            z = new TaskReader().ReadFromSmallFile(new StreamReader(@"Jenia.txt"));
-            var mp = new SingleCoreMathOperationsProvider();
-            SimpleSolver ss = new SimpleSolver(mp);
-
-            var answer = ss.SolveTask(z);
-            Console.WriteLine("Solution: " + answer.Solution);
-            Console.WriteLine("z: " + answer.Z);
-            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
-        }
-
         public static Answer ModularSolverCaller(string taskFile)
         {
+
             Task z;
             using (var reader = new StreamReader(taskFile))
             {
                 z = new TaskReader().ReadFromSmallFile(reader);
             }
-            var mathProvider = new SingleCoreMathOperationsProvider();
+            var mathProvider = new MulticoreCoreMathOperationsProvider();
+            var sw = Stopwatch.StartNew();
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider), 
                 new FirstIncomingVectorFinder(), new CanonicalInitialBasisFinder(), new SimpleOutgoingVectorFinder())
                 .SolveTask(z);
+            sw.Stop();
+            Jenia.Add(sw.Elapsed.TotalMilliseconds);
             return answer;
         }
 

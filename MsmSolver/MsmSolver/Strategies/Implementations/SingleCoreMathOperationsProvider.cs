@@ -4,7 +4,7 @@ namespace MsmSolver.Strategies
 {
     public class SingleCoreMathOperationsProvider : IMathOperationsProvider
     {
-        public Matrix Multiply(Matrix a, Matrix b)
+        public virtual Matrix Multiply(Matrix a, Matrix b)
         {
             if (a.ColCount == b.RowCount)
             {

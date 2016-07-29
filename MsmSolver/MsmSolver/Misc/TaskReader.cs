@@ -92,7 +92,7 @@ namespace MsmSolver.Misc
                     if (line.Contains("="))
                     {
                         result.Signs[ogranNumber] = Signs.R;
-                        result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("=") + 2));
+                        result.A0[ogranNumber] = Convert.ToDouble(line.Remove(0, line.IndexOf("=") + 1));
                         line = line.Remove(line.IndexOf("="), line.Length - line.IndexOf("="));
                         vals = line.Split(' ');
                         for (int i = 0; i < kolPerem; i++)

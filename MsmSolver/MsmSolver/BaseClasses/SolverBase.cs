@@ -60,7 +60,7 @@ namespace MsmSolver
 
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
-                Vector xs = newData.Basis.Values * task.A.GetColumn(incomingVectorIdx);
+                Vector xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
                 var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
                 //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
                 newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, xs);
@@ -83,10 +83,11 @@ namespace MsmSolver
 
         protected abstract int FindIncomingVector(Vector deltas);
 
-        private bool GetCanBeOptimized(Vector deltas)
-        {
-            return deltas.Value.Any(t => t < 0.0);
-        }
+       private bool GetCanBeOptimized(Vector deltas) 
+       {
+        const double eps = 1e-7d; 
+        return deltas.Value.Any(t=>(Math.Sign(t) == -1 && Math.Abs(t) > eps)); 
+       }
         
         protected abstract Vector CalculateDeltas(Task task, Basis basis, Vector lambdas);
 
@@ -103,7 +104,7 @@ namespace MsmSolver
         protected Vector FormX0(Basis basis, Task task)
         {
             //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
-            Vector X0 = basis.Values*task.A0;//Разложение А0 по B,Потом разберусь
+            Vector X0 = MathOperationsProvider.Multiply(basis.Values, task.A0);//Разложение А0 по B,Потом разберусь
             return X0;
         }
 
@@ -194,7 +195,6 @@ namespace MsmSolver
 
             return result;
         }
-
         public abstract string GetSolvingMethodName();
     }
 }

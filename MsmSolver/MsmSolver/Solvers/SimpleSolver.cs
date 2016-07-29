@@ -34,7 +34,12 @@ namespace MsmSolver
             newData.X0 = new Vector(data.X0.Dimension);
             newData.Lambda = new Vector(data.Lambda.Dimension);
             
-            // recalc Basis.
+         //  for (int i = 0; i < data.Lambda.Dimension; i++)
+          //  {
+          //      newData.Lambda[i] -= (newData.Basis.Values[outgoingVectorIdx][i] / Xs[outgoingVectorIdx]) * deltas[incomingVectorIdx];
+
+         //   }
+
             //вариант 2
             for (int i = 0; i < E.RowCount; i++)
             {
@@ -50,6 +55,8 @@ namespace MsmSolver
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
+
+
             
             //  recalc solution vector
             newData.X0 = MathOperationsProvider.Multiply(newData.Basis.Values, task.A0);
