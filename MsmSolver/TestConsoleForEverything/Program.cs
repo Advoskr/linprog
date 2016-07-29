@@ -20,12 +20,21 @@ namespace TestConsoleForEverything
         {
             var z = new Task();
             z = new TaskReader().ReadFromSmallFile(new StreamReader("Jenia.txt"));
-            SimpleSolver ss = new SimpleSolver(new SingleCoreMathOperationsProvider());
+            SimpleSolver ss = new SimpleSolver(new MulticoreCoreMathOperationsProvider());
 
             z = ss.MakeCanonicalForm(z);
             z = new CreationMTask().MTask(z);
 
-          //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
+            var answer = ss.SolveTask(z);
+
+
+            Console.WriteLine("Solution: " + answer.Solution);
+            Console.WriteLine("z: " + answer.Z);
+            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
+    
+            Console.ReadLine();
+
+            //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
 
             Console.ReadLine();
 
