@@ -15,7 +15,7 @@ namespace MsmSolver.Strategies
             int indexesIdx = 0;
             for (int j = 0; j < task.A.ColCount; j++)
             {
-                int k = 0;
+                int Num_Row = 0;
                 for (int i = 0; i < task.A.RowCount; i++)
                 {
                     // not identity matrix, so this cannot be canonical basis.
@@ -27,14 +27,14 @@ namespace MsmSolver.Strategies
                         if (isBasis)
                         { isBasis = false; break; }
                         //this row wasn't basis one, but now it is. 
-                        k = i;
+                        Num_Row = i;
                         isBasis = true;
                     }
                 }
                 //checked row. Now, if it's basis, we go to this block.
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
-                    if (basis.VectorIndexes.Contains(i) && task.A[k][i] == task.A[k][j])
+                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && CreationMTask.Proverka(basis.VectorIndexes))
                     { isBasis = false; break; }
                 }
                 

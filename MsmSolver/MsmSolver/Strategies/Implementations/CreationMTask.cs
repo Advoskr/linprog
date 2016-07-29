@@ -28,7 +28,7 @@ namespace MsmSolver.Strategies
             bool[] ImportantRows = new bool[task.A.RowCount]; // массив булов, true - в строке есть единица из базисного столбца
             for (int j = 0; j < task.A.ColCount; j++)  // после прохождения цикла массив булов, показывающий, где нужно добавить переменную индексы соответствующие false)
             {
-                int k = 0;
+                int Num_Row = 0;
                 for (int i = 0; i < task.A.RowCount; i++)
                 {
                     if (task.A[i][j] != 1 && task.A[i][j] != 0)
@@ -39,7 +39,7 @@ namespace MsmSolver.Strategies
                         if (inBasis)
                         { inBasis = false; break; }
                         //this row wasn't basis one, but now it is. 
-                        k = i;
+                        Num_Row = i;
                         inBasis = true;
                     }
                 }
@@ -49,7 +49,7 @@ namespace MsmSolver.Strategies
 
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
-                    if (basis.VectorIndexes.Contains(i) && task.A[k][i] == task.A[k][j] && Proverka(basis.VectorIndexes))
+                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && Proverka(basis.VectorIndexes))
                         { inBasis = false; }
                 }
                 if (!inBasis)   // если есть такой же вектор, переходим на другой столбец с помощью continue
@@ -63,7 +63,7 @@ namespace MsmSolver.Strategies
                     basis.VectorIndexes[indexesIdx++] = j;
                     // set the flag back again
                     inBasis = false;
-                    ImportantRows[k] = true;
+                    ImportantRows[Num_Row] = true;
                 }
             }
 
@@ -123,7 +123,7 @@ namespace MsmSolver.Strategies
             return result;
         }
 
-        public bool Proverka(int[] Jenia) // проверка на кол-во нулевый элементов массива basis.VectorIndexes
+        public static bool Proverka(int[] Jenia) // проверка на кол-во нулевый элементов массива basis.VectorIndexes
         {
             bool TestPerem = false;
 
