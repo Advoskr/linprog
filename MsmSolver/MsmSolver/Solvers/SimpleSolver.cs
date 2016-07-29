@@ -7,7 +7,8 @@ namespace MsmSolver
     public class SimpleSolver : SolverBase
     {
 
-        public SimpleSolver(IMathOperationsProvider mathOperationsProvider) : base(mathOperationsProvider)
+        public SimpleSolver(IMathOperationsProvider mathOperationsProvider, IAdditionalTaskHandler additionalTaskHandler) 
+            : base(mathOperationsProvider, additionalTaskHandler)
         {
         }
 
@@ -134,23 +135,6 @@ namespace MsmSolver
             return deltas;
         }
         
-        protected override Basis GetBasis(Task task)
-        {
-            //TODO WE make identity matrix here.
-            // Matrix E = new Matrix(task.A.RowCount, task.A.RowCount, Matrix.CreationVariant.IdentityMatrix);
-            //Vector eVector = new Vector(E.ColCount);
-            // return new Basis()
-            //  {
-            //    Values = E,
-            //    //TODO Bad! Here we just make a sequence (1,2,3,4,etc.), but we need to find real indexes and real bobr
-            //    VectorIndexes = Enumerable.Range(0,task.A.ColCount).ToArray()
-            //};
-
-            CanonicalInitialBasisFinder cf = new CanonicalInitialBasisFinder();
-            var result = cf.GetInitialBasis(task);
-            return result;
-        }
-
         public override string GetSolvingMethodName()
         {
             return "Modified Simplex Method";

@@ -8,17 +8,17 @@ namespace MsmSolver
         private readonly IDeltasCalculator _deltasCalculator;
         private readonly IVectorToBasisPutter _putter;
         private readonly IIncomingVectorFinder _incomingVectorFinder;
-        private readonly IInitialBasisFinder _initialBasisFinder;
+        private readonly IAdditionalTaskHandler _additionalTaskHandler;
         private readonly IOutgoingVectorFinder _outgoingVectorFinder;
 
         public ModularSolver(IMathOperationsProvider mathOperationsProvider, IDeltasCalculator deltasCalculator, 
             IVectorToBasisPutter putter, IIncomingVectorFinder incomingVectorFinder, 
-            IInitialBasisFinder initialBasisFinder, IOutgoingVectorFinder outgoingVectorFinder) : base(mathOperationsProvider)
+            IAdditionalTaskHandler additionalTaskHandler, IOutgoingVectorFinder outgoingVectorFinder) : base(mathOperationsProvider, additionalTaskHandler)
         {
             _deltasCalculator = deltasCalculator;
             _putter = putter;
             _incomingVectorFinder = incomingVectorFinder;
-            _initialBasisFinder = initialBasisFinder;
+            _additionalTaskHandler = additionalTaskHandler;
             _outgoingVectorFinder = outgoingVectorFinder;
         }
         
@@ -44,11 +44,6 @@ namespace MsmSolver
             return _deltasCalculator.CalculateDeltas(task, basis, lambdas);
         }
         
-        protected override Basis GetBasis(Task task)
-        {
-            return _initialBasisFinder.GetInitialBasis(task);
-        }
-
         public override string GetSolvingMethodName()
         {
             //TODO Return info about applied strategies
