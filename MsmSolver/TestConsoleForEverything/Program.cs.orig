@@ -25,6 +25,7 @@ namespace TestConsoleForEverything
             z = ss.MakeCanonicalForm(z);
             z = new MTaskBasisFinder().MTask(z);
 
+<<<<<<< HEAD
             var answer = ss.SolveTask(z);
 
 
@@ -34,8 +35,10 @@ namespace TestConsoleForEverything
     
             Console.ReadLine();
 
-          //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
             //  Basis basis = new CanonicalInitialBasisFinder().GetInitialBasis(z);
+=======
+          //  Basis basis = new CanonicalAdditionalTaskHandler().GetInitialBasis(z);
+>>>>>>> origin/master
 
             Console.ReadLine();
 
