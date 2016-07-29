@@ -17,15 +17,15 @@ namespace MsmSolver.Strategies
 
            
             result.A0 = new Vector(task.A0.Dimension);
-            
-            result.Direction = new Direction();
+
+            result.Direction = Direction.Max;
             result.Signs = new Signs[task.A.RowCount];
 
             bool inBasis = false; // есть ли такое вектор в базисе
             int counter = 0;      // Кол-во строк, куда нужно добавлять новую переменную
             int indexesIdx = 0;
 
-            bool[] ImportantRows = new bool[task.A.RowCount]; // массив булов, true - в строке есть единица из базисного столбца
+            bool[] importantRows = new bool[task.A.RowCount]; // массив булов, true - в строке есть единица из базисного столбца
             for (int j = 0; j < task.A.ColCount; j++)  // после прохождения цикла массив булов, показывающий, где нужно добавить переменную индексы соответствующие false)
             {
                 int Num_Row = 0;
@@ -63,13 +63,13 @@ namespace MsmSolver.Strategies
                     basis.VectorIndexes[indexesIdx++] = j;
                     // set the flag back again
                     inBasis = false;
-                    ImportantRows[Num_Row] = true;
+                    importantRows[Num_Row] = true;
                 }
             }
 
-            for (int i = 0; i < ImportantRows.Length; i++) // сколько добавить переменных, важно для Аvals          
+            for (int i = 0; i < importantRows.Length; i++) // сколько добавить переменных, важно для Аvals          
             {
-                if (ImportantRows[i] == false)
+                if (importantRows[i] == false)
                 counter++;
             }
 
@@ -85,19 +85,19 @@ namespace MsmSolver.Strategies
 
             for (int i = 0 ; i < task.A.RowCount; i++)
             {
-                if (ImportantRows[i] == false)
+                if (importantRows[i] == false)
                     Imp_counter++;
 
                 result.Signs[i] = Signs.R;
                 for (int j = 0; j < task.A.ColCount + counter; j++)
                 {
-                    if (ImportantRows[i] == true && j < task.A.ColCount)
+                    if (importantRows[i] == true && j < task.A.ColCount)
                         Avals[i][j] = task.A[i][j];
-                    if (ImportantRows[i] == true && j >= task.A.ColCount)
+                    if (importantRows[i] == true && j >= task.A.ColCount)
                         Avals[i][j] = 0;
-                    if (ImportantRows[i] == false && j < task.A.ColCount)
+                    if (importantRows[i] == false && j < task.A.ColCount)
                         Avals[i][j] = task.A[i][j];
-                    if (ImportantRows[i] == false && j >=task.A.ColCount)
+                    if (importantRows[i] == false && j >=task.A.ColCount)
                     {
                         if (j == task.A.ColCount - 1 + Imp_counter)
                             Avals[i][j] = 1;
@@ -109,7 +109,6 @@ namespace MsmSolver.Strategies
             }
 
             result.A = new Matrix(Avals);
-            result.Direction = Direction.Max;
             result.A0 = task.A0;
 
             for (int i = 0; i < task.A.ColCount + counter; i++)
