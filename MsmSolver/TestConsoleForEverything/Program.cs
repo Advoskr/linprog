@@ -9,6 +9,7 @@ using MsmSolver.Misc;
 using MsmSolver.Strategies;
 using Task = MsmSolver.Task;
 using System.Diagnostics;
+using MsmSolver.Strategies.Implementations;
 
 
 namespace TestConsoleForEverything
@@ -48,21 +49,73 @@ namespace TestConsoleForEverything
             // SolveWithSimpleSolver();
 
             //   SolveWithSimpleSolver();
+            //Console.WriteLine(Math.Sign(-0.0014f));
+            
+            //RunMultipleIterations();
 
-            RunMultipleIterations();
+            const int cols = 256;
+            const int rows = 256;
+            const int doubleSize = sizeof(double);
 
-            //const int cols = 300;
-            //const int rows = 300;
-            //const int doubleSize = sizeof(double);
+            double[][] rectArray = new double[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                rectArray[i] = new double[cols];
+                for (int j = 0; j < cols; j++)
+                {
+                    rectArray[i][j] = i + j + 1;
+                }
+            }
 
-            //double[,] rectArray = new double[rows, cols];
-            //for (int i = 0; i < rows; i++)
+            var matrix = new MsmSolver.Matrix();
+            matrix.Initialize(rectArray);
+            var sw = Stopwatch.StartNew();
+            var mp = new StrassenMathOperationsProvider();
+            MsmSolver.Matrix result = null;
+            int counter=10;
+            for (int i = 0; i < counter; i++)
+            {
+                result = mp.Multiply(matrix, matrix);
+            }
+            Console.WriteLine("Columns:"+result.ColCount);
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+
+            var matrix2 = new Matrix(cols, rows);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    matrix2[i,j] = i + j+1;
+                }
+            }
+            
+            sw.Restart();
+            Matrix res = null;
+            for (int i = 0; i < counter; i++)
+            {
+                res = matrix2*matrix2;
+            }
+            Console.WriteLine("Columns:" + res.cols);
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+
+            for (int i = 0; i < result.RowCount; i++)
+            {
+                for (int j = 0; j < result.ColCount; j++)
+                {
+                    if(res[i,j]!=result[i,j])
+                        throw new Exception("!");
+                }
+            }
+
+            //int counter=10000;
+            //for (int i = 0; i < counter; i++)
             //{
-            //    for (int j = 0; j < cols; j++)
-            //    {
-            //        rectArray[i, j] = i + j;
-            //    }
+            //    var cl = new SomeClass(rectArray);
             //}
+            //sw.Stop();
+            //Console.WriteLine(sw.Elapsed.TotalMilliseconds);
             //var target = new double[rows][];
             //for (int i = 0; i < rows; i++)
             //{
@@ -109,10 +162,23 @@ namespace TestConsoleForEverything
             Console.ReadLine();
         }
 
+        private class SomeClass
+        {
+            public double[,] Values { get; set; }
+
+            public SomeClass(double[,] vals)
+            {
+                //Values = vals;
+                Values = new double[vals.GetLength(0), vals.GetLength(1)];
+                var len = vals.GetLength(0)*vals.GetLength(1)*sizeof (double);
+                Buffer.BlockCopy(vals, 0, Values, 0, len);
+            }
+        }
+
         private static void RunMultipleIterations()
         {
             List<double> Jenia = new List<double>(5);
-            int execCount = 2;
+            int execCount = 4;
             Answer answer = null;
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
@@ -120,6 +186,7 @@ namespace TestConsoleForEverything
                 answer = ModularSolverCaller("Zadacha 300x300.txt");
                 Jenia.Add(sw.Elapsed.TotalMilliseconds);
                 sw.Stop();
+                Console.WriteLine($"Iteration: {i} completed");
                 sw.Restart();
             }
 
@@ -158,7 +225,7 @@ namespace TestConsoleForEverything
             {
                 z = new TaskReader().ReadFromSmallFile(reader);
             }
-            var mathProvider = new MulticoreCoreMathOperationsProvider();
+            var mathProvider = new StrassenMathOperationsProvider();
             
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
                 new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new SimpleOutgoingVectorFinder())

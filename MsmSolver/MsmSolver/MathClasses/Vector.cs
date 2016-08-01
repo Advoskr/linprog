@@ -40,7 +40,8 @@ namespace MsmSolver
         public void Initialize(double[] a)
         {
             Dimension = a.Length;
-            Array.Copy(a, Value, Dimension);
+            Value = a;
+            //Array.Copy(a, Value, Dimension);
         }
 
         public static Vector operator *(Vector a, double value)
