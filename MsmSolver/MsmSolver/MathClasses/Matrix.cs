@@ -97,7 +97,7 @@ namespace MsmSolver
             ColCount = val[0].GetLength(0);
             _values = val;
             //_values = new double[RowCount, ColCount];
-            //Buffer.BlockCopy(val, 0, _values, 0, _values.Length*sizeof(double));
+          //  Buffer.BlockCopy(val, 0, _values, 0, _values.Length*sizeof(double));
             //Array.Copy(val, 0, _values, 0, _values.Length);
         }
 
