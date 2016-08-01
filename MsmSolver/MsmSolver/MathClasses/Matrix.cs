@@ -97,7 +97,8 @@ namespace MsmSolver
             ColCount = val[0].GetLength(0);
             _values = val;
             //_values = new double[RowCount, ColCount];
-            Array.Copy(val, 0, _values, 0, _values.Length);
+            //Buffer.BlockCopy(val, 0, _values, 0, _values.Length*sizeof(double));
+            //Array.Copy(val, 0, _values, 0, _values.Length);
         }
 
         public Vector GetColumn(int index)
