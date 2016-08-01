@@ -21,14 +21,11 @@ namespace MsmSolver.Strategies
         private double[,] Transformer1_2(double[][] ss)
             {
             double[,] matrix = new double[ss.GetLength(0), ss[0].GetLength(0)];
-
                 for (int i = 0; i < matrix.GetLength(0); i++)
                     {
-                    for (int j = 0; j < matrix.GetLength(1); j++)
-                        {
-                            matrix[i,j] = ss[i][j];
-                        }
+                        Buffer.BlockCopy(ss[i], 0, matrix, sizeof(double) * i * matrix.GetLength(1), sizeof(double)*matrix.GetLength(1));
                     }
+    
                 return matrix;
             }
         
@@ -36,20 +33,16 @@ namespace MsmSolver.Strategies
         {
             double[][] matrix = new double[ss.GetLength(0)][];
 
-            for (int i = 0; i < ss.GetLength(0); i++)
+            for(int i = 0; i < ss.GetLength(0); i++)
             {
                 matrix[i] = new double[ss.GetLength(1)];
             }
 
-
-
             for (int i = 0; i < ss.GetLength(0); i++)
             {
-                for (int j = 0; j < ss.GetLength(1); j++)
-                {
-                    matrix[i][j] = ss[i,j];
-                }
+                Buffer.BlockCopy(ss, sizeof(double) * i * matrix[0].GetLength(0), matrix[i], 0, sizeof(double) * matrix[0].GetLength(0));
             }
+
             return matrix;
         }
 
