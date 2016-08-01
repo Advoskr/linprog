@@ -89,7 +89,7 @@ namespace MsmSolver
 
                 //canBeOptimized = GetCanBeOptimized(deltas);
 
-                Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount));
+                //Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount));
                 result.StepCount++;                                         // посколько outgoingVectorIdx - строка, а не номер вектора
             }
             result.Basis = newData.Basis;
