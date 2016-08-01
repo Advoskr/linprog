@@ -27,19 +27,18 @@ namespace MsmSolver
         protected Answer SolveTaskInternal(Task task)
         {
             //recreate task to get canonical form without <= / >=
-            var canonicalTask = MakeCanonicalForm(task);
             //now we need to get basis from task
-            var getBasisResult = GetBasis(canonicalTask);
+            var getBasisResult = GetBasis(task);
             if (getBasisResult.Item1)
             {
                 Basis basis = getBasisResult.Item2;
-                return SolveWithBasis(canonicalTask, basis);
+                return SolveWithBasis(task, basis);
             }
             else
             {
-                var additionalTask = _handler.FormAdditionalTask(canonicalTask);
+                var additionalTask = _handler.FormAdditionalTask(task);
                 var additionalAnswer = SolveTaskInternal(additionalTask);
-                return _handler.AnalyzeAnswer(additionalAnswer, this);
+                return additionalAnswer;
             }
         }
 
