@@ -91,6 +91,17 @@ namespace MsmSolver
         {
         }
 
+        public Matrix(int rowCount, int colCount)
+        {
+            RowCount = rowCount;
+            ColCount = colCount;
+            _values = new double[RowCount][];
+            for (int i = 0; i < RowCount; i++)
+            {
+                _values[i] = new double[ColCount];
+            }
+        }
+
         public void Initialize(double[][] val)
         {
             RowCount = val.GetLength(0);
@@ -131,44 +142,44 @@ namespace MsmSolver
         //    double[,] vC = new double[a.ColCount, this.RowCount];
         //    externExtensions.MatMulFire(vC, a._values, this._values, a.RowCount, this.ColCount, a.ColCount);
         //    _values = vC;
-        //}
-
-    /*    public static Matrix MultiplyMatricesParallel(Matrix matA, Matrix matB)
-        {
-            if (matA.ColCount == matB.RowCount)
-            {
-                Matrix res = new Matrix();
-                double[][] val = new double[matA.RowCount][];
-                for (int i = 0; i < matA.RowCount; i++)
-                {
-                    val[i] = new double[matB.ColCount];
-                }
-                int matACols = matA.ColCount;
-                int matBCols = matB.ColCount;
-                int matARows = matA.RowCount;
-
-                // A basic matrix multiplication.
-                // Parallelize the outer loop to partition the source array by rows.
-                Parallel.For(0, matARows, i =>
-                {
-                    for (int j = 0; j < matBCols; j++)
-                    {
-                        // Use a temporary to improve parallel performance.
-                        double temp = 0;
-                        for (int k = 0; k < matACols; k++)
-                        {
-                            temp += matA[i, k] * matB[k, j];
-                        }
-                        val[i][j] = temp;
-                    }
-                });
-
-                res.Initialize(val);
-                return res;
-            }
-            else throw new Exception("Wrong matrix dimensions");
-        }*/
-
-        //интересно, нам на "направление" вектора срать?)))
     }
+
+    ///*    public static Matrix MultiplyMatricesParallel(Matrix matA, Matrix matB)
+    //    {
+    //        if (matA.ColCount == matB.RowCount)
+    //        {
+    //            Matrix res = new Matrix();
+    //            double[][] val = new double[matA.RowCount][];
+    //            for (int i = 0; i < matA.RowCount; i++)
+    //            {
+    //                val[i] = new double[matB.ColCount];
+    //            }
+    //            int matACols = matA.ColCount;
+    //            int matBCols = matB.ColCount;
+    //            int matARows = matA.RowCount;
+
+    //            // A basic matrix multiplication.
+    //            // Parallelize the outer loop to partition the source array by rows.
+    //            Parallel.For(0, matARows, i =>
+    //            {
+    //                for (int j = 0; j < matBCols; j++)
+    //                {
+    //                    // Use a temporary to improve parallel performance.
+    //                    double temp = 0;
+    //                    for (int k = 0; k < matACols; k++)
+    //                    {
+    //                        temp += matA[i, k] * matB[k, j];
+    //                    }
+    //                    val[i][j] = temp;
+    //                }
+    //            });
+
+    //            res.Initialize(val);
+    //            return res;
+    //        }
+    //        else throw new Exception("Wrong matrix dimensions");
+    //    }*/
+
+    //    //интересно, нам на "направление" вектора срать?)))
+    //}
 }

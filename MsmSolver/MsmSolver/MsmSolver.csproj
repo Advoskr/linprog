@@ -68,6 +68,7 @@
     <Compile Include="Strategies\Implementations\LexicographicalOutgoingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\SimpleOutgoingVectorFinder.cs" />
     <Compile Include="Strategies\Implementations\LastIncomingVectorFinder.cs" />
+    <Compile Include="Strategies\Implementations\StrassenMathOperationsProvider.cs" />
     <Compile Include="Strategies\Interfaces\IDeltasCalculator.cs" />
     <Compile Include="Strategies\Interfaces\IIncomingVectorFinder.cs" />
     <Compile Include="Strategies\Interfaces\IAdditionalTaskHandler.cs" />
