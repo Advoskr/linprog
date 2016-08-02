@@ -108,7 +108,7 @@ namespace MsmSolver
         private bool GetCanBeOptimized(Vector deltas)
         {
             const double eps = 1e-7d;
-            return deltas.Value.Any(t => (Math.Sign(t) == -1 && Math.Abs(t) > eps));
+            return deltas.Value.Any(t => !double.IsNaN(t) && (Math.Sign(t) == -1 && Math.Abs(t) > eps));
         }
 
         protected abstract Vector CalculateDeltas(Task task, Basis basis, Vector lambdas);

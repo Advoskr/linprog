@@ -41,6 +41,7 @@ namespace MsmSolver
         {
             Dimension = a.Length;
             Value = a;
+            //Array.Copy(a, Value, Dimension);
         }
 
         public static Vector operator *(Vector a, double value)
