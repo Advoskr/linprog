@@ -73,14 +73,36 @@ namespace MsmSolver.Misc
                     {
                         int j = 1;
                         string internalLine = "";
-                        while (line[line.IndexOf(perem[i]) - 1 - j] != '-' || line[line.IndexOf(perem[i]) - 1 - j] != '+')
+                        while (line[line.IndexOf(perem[i]) - 1 - j] != '-' && line[line.IndexOf(perem[i]) - 1 - j] != '+')
                         {
                             internalLine = line[line.IndexOf(perem[i]) - 1 - j] + internalLine;
                             j++;
-                        }
 
-                        internalLine = line[line.IndexOf(perem[i]) - 1 - j] + internalLine;
-                        result.C[i] = Convert.ToDouble(internalLine);
+                            if (line.IndexOf(perem[i]) - 1 - j == -1)
+                                break;
+                        }
+                        if(line.IndexOf(perem[i]) - 1 - j == -1)
+                            {
+                            internalLine = internalLine.Replace(".", ",");
+
+                           result.C[i] = Convert.ToDouble(internalLine);
+
+                            continue;
+                        }
+                            else                       
+                            if (line[line.IndexOf(perem[i]) - 1 - j] == '-')
+                        {
+                            internalLine = line[line.IndexOf(perem[i]) - 1 - j] + internalLine;
+                            internalLine = internalLine.Replace(".", ",");
+
+                            result.C[i] = Convert.ToDouble(internalLine);
+                        }
+                        else
+                        {
+                            internalLine = internalLine.Replace(".", ",");
+
+                           result.C[i] = Convert.ToDouble(internalLine);
+                        }
 
                     }
 
@@ -123,15 +145,33 @@ namespace MsmSolver.Misc
                             {
                                 internalLine = line[line.IndexOf(perem[i]) - 1 - j] + internalLine;
                                 j++;
+                                if (line.IndexOf(perem[i]) - 1 - j == -1)
+                                    break;
                             }
-                            if(line[line.IndexOf(perem[i]) - 1 - j] == '-')
+                            if (line.IndexOf(perem[i]) - 1 - j == -1)
+                            {
+                                internalLine = internalLine.Replace(".", ",");
+
+                                internalDouble[i] = Convert.ToDouble(internalLine);
+
+                                continue;
+                            }
+                            else                       
+                            if (line[line.IndexOf(perem[i]) - 1 - j] == '-')
                             { 
                                 internalLine = line[line.IndexOf(perem[i]) - 1 - j] + internalLine;
+                                internalLine = internalLine.Replace(".", ",");
+
+                                internalDouble[i] = Convert.ToDouble(internalLine);
+                            }
+                            else
+                            {
+                                internalLine = internalLine.Replace(".", ",");
+
+                                internalDouble[i] = Convert.ToDouble(internalLine);
                             }
 
-                            internalLine = internalLine.Replace(".", ",");
-
-                            internalDouble[i] = Convert.ToDouble(internalLine);
+                            
 
                         }
                     }

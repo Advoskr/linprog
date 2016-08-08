@@ -88,9 +88,9 @@ namespace TestConsoleForEverything
               RunMultipleIterations();
               Console.ReadLine();
 
-         //   var z = new Task();
+           // var z = new Task();
            // StreamReader reader = new StreamReader("Zadacha 300x300.txt");
-          //  z = new GTaskReader().ReadFromGFile(reader);
+           // z = new GTaskReader().ReadFromGFile(reader);
 
            // Console.ReadLine();
 
