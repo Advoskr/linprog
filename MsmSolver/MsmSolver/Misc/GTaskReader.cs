@@ -213,11 +213,14 @@ namespace MsmSolver.Misc
             result.A0 = new Vector(colOgrans);
             result.A = new Matrix(colOgrans, colCount);
             result.Signs = new Signs[colOgrans];
+            int counter = 0;
 
             for (int i = 0; i < colOgrans; i++)
             {
                 result.A0[i] = a0[i];
                 result.Signs[i] = (Signs)signs[i];
+                if (signs[i] == 0)
+                    counter++;
                 for (int j = 0; j < colCount; j++)
                 {
                     result.A._values[i][j] = a[i][j];
