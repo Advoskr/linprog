@@ -28,7 +28,12 @@ namespace MsmSolver
         {
             //recreate task to get canonical form without <= / >=
             //now we need to get basis from task
+            bool JeniaProverka = false;
+           
             var getBasisResult = GetBasis(task);
+
+            JeniaProverka = TestBasis(getBasisResult.Item2.Values);
+            
             if (getBasisResult.Item1)
             {
                 Basis basis = getBasisResult.Item2;
@@ -56,6 +61,22 @@ namespace MsmSolver
             };
             var result = SolveWithData(canonicalTask, solverData);
             return result;
+        }
+
+        private bool TestBasis(Matrix matrix)
+        {
+            for (int i = 0; i < matrix.ColCount; i++)
+            {
+                for (int j = i + 1; j < matrix.ColCount; j++)
+                {
+                    if (matrix.GetColumn(i) == matrix.GetColumn(j))
+                    { return true; }
+                        
+                }
+            }
+
+            return false;
+
         }
 
         private double CalculateZ(Task task, TaskSolvingData data)
@@ -89,7 +110,7 @@ namespace MsmSolver
 
                 //canBeOptimized = GetCanBeOptimized(deltas);
 
-                //Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount));
+               // Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount));
                 result.StepCount++;                                         // посколько outgoingVectorIdx - строка, а не номер вектора
             }
             result.Basis = newData.Basis;
