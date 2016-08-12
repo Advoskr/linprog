@@ -15,7 +15,9 @@ namespace MsmSolver.Strategies
             MathOperationsProvider = mathOperationsProvider;
         }
 
-    
+
+        private const double eps = 0.0000001;
+
         public int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx, Vector xs)
         {
             //лексикографический подход
@@ -35,7 +37,7 @@ namespace MsmSolver.Strategies
                 }
 
 
-                if (val == minimum)
+                if (Math.Abs(val - minimum) < eps)
                 {
                     needLeks = true;
                 }
@@ -47,13 +49,13 @@ namespace MsmSolver.Strategies
                 minimum = int.MaxValue;
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
-                    if (Array.IndexOf(data.Basis.VectorIndexes,i)!=-1) continue;
+                    if (Array.IndexOf(data.Basis.VectorIndexes, i) != -1) continue;
                     Vector column = MathOperationsProvider.Multiply(data.Basis.Values, task.A.GetColumn(i));
                     for (int k = 0; k < xs.Dimension; k++)
                     {
                         double val = column[k] / xs[k];
 
-                        if (val == minimum)
+                        if (Math.Abs(val - minimum) < eps)
                         {
                             needLeks = true;
                         }

@@ -11,12 +11,14 @@ namespace MsmSolver.Strategies.Implementations
             return StrassenMultiply(a, b);
         }
 
+        private const int MinMatrixSize = 128;
+
         public static Matrix ZeroMatrix(int iRows, int iCols)       // Function generates the zero matrix
         {
             Matrix matrix = new Matrix(iRows, iCols);
-            for (int i = 0; i < iRows; i++)
-                for (int j = 0; j < iCols; j++)
-                    matrix[i, j] = 0;
+            //for (int i = 0; i < iRows; i++)
+            //    for (int j = 0; j < iCols; j++)
+            //        matrix[i, j] = 0;
             return matrix;
         }
 
@@ -77,13 +79,16 @@ namespace MsmSolver.Strategies.Implementations
 
             int msize = Math.Max(Math.Max(A.RowCount, A.ColCount), Math.Max(B.RowCount, B.ColCount));
 
-            if (msize < 32)
+            if (msize < MinMatrixSize)
             {
                 R = ZeroMatrix(A.RowCount, B.ColCount);
+                //Parallel.For(0, R.RowCount, i =>
+                //{
                 for (int i = 0; i < R.RowCount; i++)
                     for (int j = 0; j < R.ColCount; j++)
                         for (int k = 0; k < A.ColCount; k++)
-                            R[i, j] += A[i, k] * B[k, j];
+                            R[i, j] += A[i, k]*B[k, j];
+                //});
                 return R;
             }
 
@@ -199,14 +204,17 @@ namespace MsmSolver.Strategies.Implementations
             int size = A.RowCount;
             int h = size / 2;
 
-            if (size < 32)
+            if (size < MinMatrixSize)
             {
-                for (int i = 0; i < C.RowCount; i++)
-                    for (int j = 0; j < C.ColCount; j++)
-                    {
-                        C[i, j] = 0;
-                        for (int k = 0; k < A.ColCount; k++) C[i, j] += A[i, k] * B[k, j];
-                    }
+                Parallel.For(0, C.RowCount, i =>
+                {
+                    //for (int i = 0; i < C.RowCount; i++)
+                        for (int j = 0; j < C.ColCount; j++)
+                        {
+                            C[i, j] = 0;
+                            for (int k = 0; k < A.ColCount; k++) C[i, j] += A[i, k]*B[k, j];
+                        }
+                });
                 return;
             }
 
@@ -254,7 +262,7 @@ namespace MsmSolver.Strategies.Implementations
                 StrassenMultiplyRun(f[l, 0], f[l, 1], f[l, 1 + 7], l + 1, f); // (A12 - A22) * (B21 + B22);
             //});
             //System.Threading.Tasks.Task.WaitAll(tasks);
-
+            
             var tasks2 = new System.Threading.Tasks.Task[4];
 
             /// C11

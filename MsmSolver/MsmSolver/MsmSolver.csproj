@@ -63,6 +63,8 @@
     <Compile Include="Strategies\Implementations\MulticoreCoreMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\LazyDeltasCalculator.cs" />
     <Compile Include="BaseClasses\SolverStepData.cs" />
+    <Compile Include="Strategies\Implementations\MulticoreCoreMathOperationsProvider2.cs" />
+    <Compile Include="Strategies\Implementations\MultiCoreStrassenMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\SingleCoreMathOperationsProvider.cs" />
     <Compile Include="Strategies\Implementations\StraightVectorToBasisPutter.cs" />
     <Compile Include="Strategies\Implementations\LexicographicalOutgoingVectorFinder.cs" />

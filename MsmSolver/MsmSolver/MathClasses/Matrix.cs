@@ -25,7 +25,7 @@ namespace MsmSolver
         }
 
         public double[][] _values;
-
+        
         public double this[int index1, int index2]
         {
             get { return _values[index1][index2]; }
@@ -39,11 +39,11 @@ namespace MsmSolver
         //    return this;
         //}
 
-        public Vector this[int index]
+        public double[] this[int index]
         {
             get
             {
-                if (index < 0 || index >= _values.Length) return new Vector();
+                if (index < 0 || index >= _values.Length) return null;
                 else
                 {
                     double[] vals = new double[ColCount];
@@ -51,7 +51,7 @@ namespace MsmSolver
                     {
                         vals[i] = _values[index][i];
                     }
-                    return new Vector(vals);
+                    return vals;
                 }
 
             }

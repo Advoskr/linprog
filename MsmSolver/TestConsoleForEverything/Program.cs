@@ -50,64 +50,10 @@ namespace TestConsoleForEverything
 
             //   SolveWithSimpleSolver();
             //Console.WriteLine(Math.Sign(-0.0014f));
-            
-            //RunMultipleIterations();
 
-            const int cols = 256;
-            const int rows = 256;
-            const int doubleSize = sizeof(double);
+            RunMultipleIterations();
 
-            double[][] rectArray = new double[rows][];
-            for (int i = 0; i < rows; i++)
-            {
-                rectArray[i] = new double[cols];
-                for (int j = 0; j < cols; j++)
-                {
-                    rectArray[i][j] = i + j + 1;
-                }
-            }
-
-            var matrix = new MsmSolver.Matrix();
-            matrix.Initialize(rectArray);
-            var sw = Stopwatch.StartNew();
-            var mp = new StrassenMathOperationsProvider();
-            MsmSolver.Matrix result = null;
-            int counter=10;
-            for (int i = 0; i < counter; i++)
-            {
-                result = mp.Multiply(matrix, matrix);
-            }
-            Console.WriteLine("Columns:"+result.ColCount);
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
-
-            var matrix2 = new Matrix(cols, rows);
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    matrix2[i,j] = i + j+1;
-                }
-            }
-            
-            sw.Restart();
-            Matrix res = null;
-            for (int i = 0; i < counter; i++)
-            {
-                res = matrix2*matrix2;
-            }
-            Console.WriteLine("Columns:" + res.cols);
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
-
-            for (int i = 0; i < result.RowCount; i++)
-            {
-                for (int j = 0; j < result.ColCount; j++)
-                {
-                    if(res[i,j]!=result[i,j])
-                        throw new Exception("!");
-                }
-            }
+            //GetValue();
 
             //int counter=10000;
             //for (int i = 0; i < counter; i++)
@@ -159,7 +105,69 @@ namespace TestConsoleForEverything
             //    Buffer.BlockCopy(target[i],0, rectArray2, doubleSize*i* cols, doubleSize*cols);
             //}
 
+            var str = "X15:Real";
+            Console.WriteLine(str.Substring(str.IndexOf(":"), str.Length - 1));
+
             Console.ReadLine();
+        }
+
+        private static void GetValue()
+        {
+            const int cols = 256;
+            const int rows = 256;
+            const int doubleSize = sizeof (double);
+
+            double[][] rectArray = new double[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                rectArray[i] = new double[cols];
+                for (int j = 0; j < cols; j++)
+                {
+                    rectArray[i][j] = i + j + 1;
+                }
+            }
+
+            var matrix = new MsmSolver.Matrix();
+            matrix.Initialize(rectArray);
+            var sw = Stopwatch.StartNew();
+            var mp = new StrassenMathOperationsProvider();
+            MsmSolver.Matrix result = null;
+            int counter = 10;
+            for (int i = 0; i < counter; i++)
+            {
+                result = mp.Multiply(matrix, matrix);
+            }
+            Console.WriteLine("Columns:" + result.ColCount);
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+
+            var matrix2 = new Matrix(cols, rows);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    matrix2[i, j] = i + j + 1;
+                }
+            }
+
+            sw.Restart();
+            Matrix res = null;
+            for (int i = 0; i < counter; i++)
+            {
+                res = matrix2*matrix2;
+            }
+            Console.WriteLine("Columns:" + res.cols);
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+
+            for (int i = 0; i < result.RowCount; i++)
+            {
+                for (int j = 0; j < result.ColCount; j++)
+                {
+                    if (res[i, j] != result[i, j])
+                        throw new Exception("!");
+                }
+            }
         }
 
         private class SomeClass
@@ -178,7 +186,7 @@ namespace TestConsoleForEverything
         private static void RunMultipleIterations()
         {
             List<double> Jenia = new List<double>(5);
-            int execCount = 4;
+            int execCount = 2;
             Answer answer = null;
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
