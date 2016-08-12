@@ -103,8 +103,13 @@ namespace MsmSolver
 
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
-                Vector xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
+                Vector xs;
+                //if (result.StepCount == 0)
+                //    xs = task.A.GetColumn(incomingVectorIdx);
+                //else
+                    xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
                 var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
+                
                 //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
                 newData = PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, newData, deltas, xs);
 
