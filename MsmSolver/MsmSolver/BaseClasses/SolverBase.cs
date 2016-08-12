@@ -110,7 +110,7 @@ namespace MsmSolver
 
                 //canBeOptimized = GetCanBeOptimized(deltas);
 
-               // Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, outgoingVectorIdx + task.A.ColCount - task.A.RowCount));
+                
                 result.StepCount++;                                         // посколько outgoingVectorIdx - строка, а не номер вектора
             }
             result.Basis = newData.Basis;
@@ -180,7 +180,7 @@ namespace MsmSolver
                 //checked row. Now, if it's basis, we go to this block.
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
-                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && MTaskBasisFinder.Proverka(basis.VectorIndexes))
+                    if (basis.VectorIndexes.Contains(i) && task.A[Num_Row][i] == task.A[Num_Row][j] && MTaskBasisFinder.Proverka(basis.VectorIndexes) && basis.VectorIndexes[task.A.RowCount - 1] != 0)
                     { isBasis = false; break; }
                 }
 

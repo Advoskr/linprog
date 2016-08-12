@@ -117,7 +117,7 @@ namespace TestConsoleForEverything
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
             {
-                answer = ModularSolverCaller("Zadacha 300x300.txt");
+                answer = ModularSolverCaller("Jenia.txt");
                 Jenia.Add(sw.Elapsed.TotalMilliseconds);
                 sw.Stop();
                Console.WriteLine($"Iteration: {i} completed");
@@ -131,7 +131,7 @@ namespace TestConsoleForEverything
             Console.WriteLine("Execution Time:" + Jenia.Average() + "ms");
         }
 
-        private static void SolveWithSimpleSolver()
+   /*     private static void SolveWithSimpleSolver()
         {
             var z = new Task();
             z = new TaskReader().ReadFromSmallFile(new StreamReader("Jenia.txt"));
@@ -149,7 +149,7 @@ namespace TestConsoleForEverything
             Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
 
             Console.WriteLine(sw.Elapsed.TotalMilliseconds);
-        }
+        }*/
 
         public static Answer ModularSolverCaller(string taskFile)
         {
@@ -162,7 +162,7 @@ namespace TestConsoleForEverything
             var mathProvider = new CudaMathOperationsProvider();
             
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
-                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new SimpleOutgoingVectorFinder())
+                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider))
                 .SolveTask(z);
             
             return answer;

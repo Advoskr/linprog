@@ -1,4 +1,6 @@
-﻿namespace MsmSolver.Strategies
+﻿using System;
+namespace MsmSolver.Strategies
+ 
 {
     public class StraightVectorToBasisPutter : IVectorToBasisPutter
     {
@@ -44,6 +46,9 @@
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
             var newBasisValues = _provider.Multiply(E, data.Basis.Values);
+
+
+            Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, data.Basis.VectorIndexes[outgoingVectorIdx]));
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
