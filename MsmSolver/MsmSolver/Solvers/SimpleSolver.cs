@@ -53,6 +53,8 @@ namespace MsmSolver
             _numvivodold = outgoingVectorIdx;
             var newBasisValues = MathOperationsProvider.Multiply(E, data.Basis.Values);
 
+            
+
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
