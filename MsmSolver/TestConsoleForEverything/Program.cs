@@ -162,7 +162,7 @@ namespace TestConsoleForEverything
             var mathProvider = new CudaMathOperationsProvider();
             
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
-                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider))
+                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new SimpleOutgoingVectorFinder())
                 .SolveTask(z);
             
             return answer;
