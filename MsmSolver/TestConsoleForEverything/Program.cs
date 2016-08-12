@@ -112,7 +112,7 @@ namespace TestConsoleForEverything
         private static void RunMultipleIterations()
         {
             List<double> Jenia = new List<double>(5);
-            int execCount = 1;
+            int execCount = 5;
             Answer answer = null;
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
@@ -131,7 +131,7 @@ namespace TestConsoleForEverything
             Console.WriteLine("Execution Time:" + Jenia.Average() + "ms");
         }
 
-        private static void SolveWithSimpleSolver()
+   /*     private static void SolveWithSimpleSolver()
         {
             var z = new Task();
             z = new TaskReader().ReadFromSmallFile(new StreamReader("Jenia.txt"));
@@ -149,7 +149,7 @@ namespace TestConsoleForEverything
             Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
 
             Console.WriteLine(sw.Elapsed.TotalMilliseconds);
-        }
+        }*/
 
         public static Answer ModularSolverCaller(string taskFile)
         {
@@ -159,12 +159,10 @@ namespace TestConsoleForEverything
             {
                 z = new GTaskReader().ReadFromGFile(reader);
             }
-            var mathProvider = new MulticoreCoreMathOperationsProvider();
+            var mathProvider = new CudaMathOperationsProvider();
             
-            var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), 
-                new StraightVectorToBasisPutter(mathProvider),
-                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), 
-                new LexicographicalOutgoingVectorFinder(mathProvider))
+            var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
+                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider))
                 .SolveTask(z);
             
             return answer;
