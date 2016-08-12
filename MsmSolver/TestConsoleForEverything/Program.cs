@@ -112,12 +112,12 @@ namespace TestConsoleForEverything
         private static void RunMultipleIterations()
         {
             List<double> Jenia = new List<double>(5);
-            int execCount = 5;
+            int execCount = 1;
             Answer answer = null;
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
             {
-                answer = ModularSolverCaller("Zadacha 300x300.txt");
+                answer = ModularSolverCaller("Jenia.txt");
                 Jenia.Add(sw.Elapsed.TotalMilliseconds);
                 sw.Stop();
                Console.WriteLine($"Iteration: {i} completed");
@@ -159,10 +159,12 @@ namespace TestConsoleForEverything
             {
                 z = new GTaskReader().ReadFromGFile(reader);
             }
-            var mathProvider = new CudaMathOperationsProvider();
+            var mathProvider = new MulticoreCoreMathOperationsProvider();
             
-            var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
-                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new SimpleOutgoingVectorFinder())
+            var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), 
+                new StraightVectorToBasisPutter(mathProvider),
+                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), 
+                new LexicographicalOutgoingVectorFinder(mathProvider))
                 .SolveTask(z);
             
             return answer;

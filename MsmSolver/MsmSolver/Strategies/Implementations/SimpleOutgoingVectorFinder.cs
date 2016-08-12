@@ -9,6 +9,8 @@
             double minimum = int.MaxValue;
             for (int k = 0; k < xs.Dimension; k++)
             {
+                if (xs[k] <= 0)
+                    continue;
                 //TODO Check this. I had A0 in my old impl.
                 var newMin = data.X0[k] / xs[k];
                 if (newMin < minimum && xs[k] > 0)

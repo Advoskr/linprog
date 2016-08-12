@@ -1,4 +1,6 @@
-﻿namespace MsmSolver.Strategies
+﻿using System;
+
+namespace MsmSolver.Strategies
 {
     public class StraightVectorToBasisPutter : IVectorToBasisPutter
     {
@@ -17,6 +19,8 @@
         public TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, Task task, TaskSolvingData data,
             Vector deltas, Vector xs)
         {
+            var log = string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, data.Basis.VectorIndexes[outgoingVectorIdx]);
+            Console.WriteLine(log);
             if (_eVector == null)
                 _eVector = new Vector(data.Basis.Values.ColCount);
 

@@ -29,20 +29,21 @@ namespace MsmSolver.Strategies
             {
                 double val = data.X0[k] / xs[k];
 
-                if (val < minimum && xs[k] > 0)
-                {
-                    numvivod = k;
-                    minimum = val;
-                    needLeks = false;
-                }
-
+                if(xs[k]<=0)
+                    continue;
 
                 if (Math.Abs(val - minimum) < eps)
                 {
                     needLeks = true;
                 }
 
-
+                if (val < minimum && xs[k] > 0)
+                {
+                    numvivod = k;
+                    minimum = val;
+                    needLeks = false;
+                }
+                
             }
             if (needLeks)
             {
@@ -53,6 +54,9 @@ namespace MsmSolver.Strategies
                     Vector column = MathOperationsProvider.Multiply(data.Basis.Values, task.A.GetColumn(i));
                     for (int k = 0; k < xs.Dimension; k++)
                     {
+                        if (xs[k] <= 0)
+                            continue;
+
                         double val = column[k] / xs[k];
 
                         if (Math.Abs(val - minimum) < eps)
