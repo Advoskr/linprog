@@ -6,7 +6,7 @@
         {
             //найдем минимум Хko/Xks и, т.о., выводимый вектор
             var outgoingVectorIdx = -1;
-            double minimum = int.MaxValue;
+            double minimum = double.MaxValue;
             for (int k = 0; k < xs.Dimension; k++)
             {
                 if (xs[k] <= 0)
@@ -19,6 +19,8 @@
                     minimum = newMin;
                 }
             }
+            if (outgoingVectorIdx == -1)
+                throw new System.Exception("Целевая функция не ограничена");
             return outgoingVectorIdx;
         }
     }

@@ -64,7 +64,7 @@ namespace MsmSolver.Strategies
         }
 
 
-        protected Vector GetCbazis(Task task, Basis basis)
+        public static Vector GetCbazis(Task task, Basis basis)
         {
             var result = new Vector(basis.VectorIndexes.Length);
 
