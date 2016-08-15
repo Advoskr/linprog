@@ -42,6 +42,7 @@ namespace MsmSolver
             else
             {
                 var additionalTask = _handler.FormAdditionalTask(task);
+
                 var additionalAnswer = SolveTaskInternal(additionalTask);
                 return additionalAnswer;
             }
@@ -92,6 +93,7 @@ namespace MsmSolver
         protected virtual Answer SolveWithData(Task task, TaskSolvingData data)
         {
             var result = new Answer();
+            //bool jenia_Test = false; Проверка на ограниченность ЦФ
             TaskSolvingData newData = new TaskSolvingData();
             newData = data;
             while (true)
@@ -103,11 +105,21 @@ namespace MsmSolver
 
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
+              
                 Vector xs;
                 //if (result.StepCount == 0)
                 //    xs = task.A.GetColumn(incomingVectorIdx);
                 //else
                     xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
+                
+          /*      for (int i = 0; i < xs.Dimension; i++)
+                {
+                    if (Math.Sign(xs[i]) != -1)                   Проверка на ограниченность ЦФ
+                        jenia_Test = true;
+                }
+
+                if (jenia_Test == false)
+                    throw new Exception("Целевая функция не ограничена");*/
                 var outgoingVectorIdx = FindOutgoingVector(task, newData, incomingVectorIdx, xs);
                 
                 //TODO Merge Xs, out-,in-coming idx and delta into "Step parameters"
@@ -117,6 +129,12 @@ namespace MsmSolver
 
                 
                 result.StepCount++;                                         // посколько outgoingVectorIdx - строка, а не номер вектора
+            }
+
+            for (int i = 0; i < newData.Basis.VectorIndexes.GetLength(0); i++)
+            {
+                if (task.C[newData.Basis.VectorIndexes[i]] == -1000)
+                    throw new Exception("Task have no solution");
             }
             result.Basis = newData.Basis;
             result.Solution = newData.X0;

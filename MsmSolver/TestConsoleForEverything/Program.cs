@@ -12,6 +12,7 @@ using System.Diagnostics;
 using MsmSolver.Strategies.Implementations;
 
 
+
 namespace TestConsoleForEverything
 {
     class Program
@@ -112,12 +113,12 @@ namespace TestConsoleForEverything
         private static void RunMultipleIterations()
         {
             List<double> Jenia = new List<double>(5);
-            int execCount = 5;
+            int execCount = 1;
             Answer answer = null;
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
             {
-                answer = ModularSolverCaller("Jenia.txt");
+                answer = ModularSolverCaller("Zadacha 300x300.txt");
                 Jenia.Add(sw.Elapsed.TotalMilliseconds);
                 sw.Stop();
                Console.WriteLine($"Iteration: {i} completed");
@@ -129,6 +130,11 @@ namespace TestConsoleForEverything
             Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
 
             Console.WriteLine("Execution Time:" + Jenia.Average() + "ms");
+
+            for ( int i = 0; i < answer.Basis.VectorIndexes.GetLength(0);i++)
+            {
+                Console.Write(answer.Basis.VectorIndexes[i] + " ");
+            }
         }
 
    /*     private static void SolveWithSimpleSolver()
@@ -158,6 +164,7 @@ namespace TestConsoleForEverything
             using (var reader = new StreamReader(taskFile))
             {
                 z = new GTaskReader().ReadFromGFile(reader);
+               // z = new TaskReader().ReadFromSmallFile(reader);
             }
             var mathProvider = new CudaMathOperationsProvider();
             

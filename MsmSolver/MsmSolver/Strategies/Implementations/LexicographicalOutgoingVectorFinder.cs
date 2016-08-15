@@ -22,7 +22,7 @@ namespace MsmSolver.Strategies
         {
             //лексикографический подход
             //для вектора А0
-            double minimum = int.MaxValue;
+            double minimum = double.MaxValue;
             bool needLeks = false;
             int numvivod = -1;
             for (int k = 0; k < xs.Dimension; k++)
@@ -75,6 +75,8 @@ namespace MsmSolver.Strategies
                     if (!needLeks) break;
                 }
             }
+            if (numvivod == -1)
+                throw new Exception("Целевая функция не ограничена");
             return numvivod;
         }
     }

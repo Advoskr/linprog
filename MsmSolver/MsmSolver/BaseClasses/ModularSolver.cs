@@ -1,5 +1,6 @@
 ﻿using System;
 using MsmSolver.Strategies;
+using System.Linq;
 
 namespace MsmSolver
 {
@@ -26,7 +27,9 @@ namespace MsmSolver
             Task task, TaskSolvingData data,
             Vector deltas, Vector Xs)
         {
-            return _putter.PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, data, deltas, Xs);
+            if (outgoingVectorIdx == -1 || data.Basis.VectorIndexes.Contains(incomingVectorIdx))
+                throw new Exception("Task has no solution!");
+                return _putter.PutVectorIntoBasis(incomingVectorIdx, outgoingVectorIdx, task, data, deltas, Xs);
         }
 
         protected override int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx, Vector xs)
