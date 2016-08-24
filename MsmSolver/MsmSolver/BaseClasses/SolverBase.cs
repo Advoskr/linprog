@@ -42,7 +42,6 @@ namespace MsmSolver
             else
             {
                 var additionalTask = _handler.FormAdditionalTask(task);
-
                 var additionalAnswer = SolveTaskInternal(additionalTask);
                 return additionalAnswer;
             }
@@ -133,8 +132,11 @@ namespace MsmSolver
 
             for (int i = 0; i < newData.Basis.VectorIndexes.GetLength(0); i++)
             {
-                if (task.C[newData.Basis.VectorIndexes[i]] == -1000)
+                if (task.C[newData.Basis.VectorIndexes[i]] == -int.MaxValue)
+                {
+                    Console.WriteLine(result.StepCount);
                     throw new Exception("Task have no solution");
+                }
             }
             result.Basis = newData.Basis;
             result.Solution = newData.X0;
@@ -212,7 +214,8 @@ namespace MsmSolver
                     //A has an identity vector in it, so we can copy it to out bobr. It'll guarantee that 1 is in correct position.
                     basis.Values.ChangeColumn(indexesIdx, task.A.GetColumn(j));
                     //vector index is our column index.
-                    basis.VectorIndexes[indexesIdx++] = j;
+                    basis.VectorIndexes[indexesIdx] = j;
+                    indexesIdx++;
                     // set the flag back again
                     isBasis = false;
                 }
@@ -281,6 +284,8 @@ namespace MsmSolver
                 }
             }
 
+           
+
             result.A = new Matrix(Avals);
 
             if (task.Direction == (Direction)0)
@@ -305,6 +310,21 @@ namespace MsmSolver
                         result.C[i] = 0;
                 }
             }
+
+            for (int i = 0; i < result.A.RowCount; i++)    // Неотрицательность А0
+            {
+                if (Math.Sign(result.A0[i]) == -1)
+                {
+                    result.A0[i] = -result.A0[i];
+                    for (int j = 0; j < result.A.ColCount; j++)
+                    {
+                        result.A._values[i][j] = -result.A._values[i][j];
+                    }
+                }
+                else
+                    continue;
+            }
+
 
             return result;
         }

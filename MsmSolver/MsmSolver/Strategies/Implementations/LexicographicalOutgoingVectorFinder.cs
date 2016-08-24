@@ -16,7 +16,7 @@ namespace MsmSolver.Strategies
         }
 
 
-        private const double eps = 0.0000001;
+        private const double eps = 1e-7d;
 
         public int FindOutgoingVector(Task task, TaskSolvingData data, int incomingVectorIdx, Vector xs)
         {
@@ -25,15 +25,22 @@ namespace MsmSolver.Strategies
             double minimum = double.MaxValue;
             bool needLeks = false;
             int numvivod = -1;
+            int LexVectIndex = 0;
             for (int k = 0; k < xs.Dimension; k++)
             {
+                if (xs[k] <= 0) //потом поправить фигню эту, X0 итак всегда неотриц. должен быть)
+                    continue;
+
+               /* if (Math.Abs(data.X0[k] - 0) < eps)
+                    data.X0[k] = 0;*/
+
                 double val = data.X0[k] / xs[k];
 
-                if(xs[k]<=0)
-                    continue;
+               
 
                 if (Math.Abs(val - minimum) < eps)
                 {
+                    LexVectIndex++;
                     needLeks = true;
                 }
 
@@ -42,20 +49,25 @@ namespace MsmSolver.Strategies
                     numvivod = k;
                     minimum = val;
                     needLeks = false;
+                    LexVectIndex = 0;
                 }
                 
             }
             if (needLeks)
             {
-                minimum = int.MaxValue;
+                Console.WriteLine("Alternatives: {0}", LexVectIndex);
+                minimum = double.MaxValue;
                 for (int i = 0; i < task.A.ColCount; i++)
                 {
                     if (Array.IndexOf(data.Basis.VectorIndexes, i) != -1) continue;
                     Vector column = MathOperationsProvider.Multiply(data.Basis.Values, task.A.GetColumn(i));
                     for (int k = 0; k < xs.Dimension; k++)
                     {
-                        if (xs[k] <= 0)
-                            continue;
+                        if (xs[k] <= 0 || (column[k] < 0 && Math.Abs(column[k]) >= eps))
+                                continue;
+
+                        if (Math.Abs(column[k] - 0) < eps)
+                            column[k] = 0;
 
                         double val = column[k] / xs[k];
 
