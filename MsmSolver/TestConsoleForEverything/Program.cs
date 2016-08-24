@@ -133,7 +133,7 @@ namespace TestConsoleForEverything
 
             for ( int i = 0; i < answer.Basis.VectorIndexes.GetLength(0);i++)
             {
-                Console.Write(answer.Basis.VectorIndexes[i] + " ");
+               Console.Write(answer.Basis.VectorIndexes[i] + " ");
             }
         }
 
@@ -164,14 +164,12 @@ namespace TestConsoleForEverything
             using (var reader = new StreamReader(taskFile))
             {
                 z = new GTaskReader().ReadFromGFile(reader);
-               // z = new TaskReader().ReadFromSmallFile(reader);
+                //z = new TaskReader().ReadFromSmallFile(reader);
             }
             var mathProvider = new CudaMathOperationsProvider();
-            
+
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
-                new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider))
-                .SolveTask(z);
-            
+                         new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider)).SolveTask(z);
             return answer;
         }
     }

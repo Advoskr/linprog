@@ -45,7 +45,7 @@ namespace MsmSolver.Strategies
             E.ChangeColumn(outgoingVectorIdx, _eVector);
             _nullVector[_numvivodold] = 0;
             _numvivodold = outgoingVectorIdx;
-            var newBasisValues = _provider.Multiply(E, data.Basis.Values);
+            var newBasisValues = _provider.Multiply(E,data.Basis.Values);
 
 
             Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, data.Basis.VectorIndexes[outgoingVectorIdx]));

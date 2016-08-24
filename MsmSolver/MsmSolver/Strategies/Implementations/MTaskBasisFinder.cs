@@ -116,7 +116,7 @@ namespace MsmSolver.Strategies
                 if (i < task.A.ColCount)
                     result.C[i] = task.C[i];
                 else
-                    result.C[i] = -1000; // ЗНАЧЕНИЕ М
+                    result.C[i] = -int.MaxValue; // ЗНАЧЕНИЕ М
             }
 
             return result;

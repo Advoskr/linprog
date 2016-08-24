@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MsmSolver.Strategies.Implementations
 {
-    public class CasualDeltasCalculator : IDeltasCalculator
+    public class SimpleDeltasCalculator : IDeltasCalculator
     {
         private readonly IMathOperationsProvider _provider;
 
-        public CasualDeltasCalculator(IMathOperationsProvider provider)
+        public SimpleDeltasCalculator(IMathOperationsProvider provider)
         {
             _provider = provider;
         }

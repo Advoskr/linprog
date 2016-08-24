@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MsmSolver.Strategies
 {
@@ -22,7 +23,10 @@ namespace MsmSolver.Strategies
             var deltas = new Vector(task.C.Dimension);
             Parallel.For(0, deltas.Dimension, (i, loopState) =>
             {
-                deltas[i] = _provider.Multiply(lambdas, task.A.GetColumn(i)) - task.C[i];
+                if (basis.VectorIndexes.Contains(i))
+                { deltas[i] = 0; }
+                else
+                { deltas[i] = _provider.Multiply(lambdas, task.A.GetColumn(i)) - task.C[i]; }
                 if (Math.Sign(deltas[i]) == -1 && Math.Abs(deltas[i]) > eps)
                     loopState.Break();
             });
