@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace MsmSolver.Strategies
 {
     public class FullParallelDeltasCalculator : IDeltasCalculator
     {
         private readonly IMathOperationsProvider _provider;
+        private const double eps = 1e-7d;
 
         public FullParallelDeltasCalculator(IMathOperationsProvider provider)
         {
@@ -21,6 +23,9 @@ namespace MsmSolver.Strategies
                     deltas[i] = 0;
                 else
                 deltas[i] = _provider.Multiply(lambdas, task.A.GetColumn(i)) - task.C[i];
+
+                //if (Math.Abs(deltas[i]) < eps)
+                  //  deltas[i] = 0;
             });
             
             return deltas;

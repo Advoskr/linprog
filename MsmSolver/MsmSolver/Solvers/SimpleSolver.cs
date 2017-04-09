@@ -17,6 +17,7 @@ namespace MsmSolver
         private static Matrix E = null;
         private static int _numvivodold = 0;
         private static Vector _nullVector = null;
+        private static int counter = 0;
 
         protected override TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, Task task, TaskSolvingData data, Vector deltas, Vector Xs)
         {
@@ -53,7 +54,7 @@ namespace MsmSolver
             _numvivodold = outgoingVectorIdx;
             var newBasisValues = MathOperationsProvider.Multiply(E, data.Basis.Values);
 
-            
+ 
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;

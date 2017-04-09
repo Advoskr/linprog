@@ -4,17 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MsmSolver;
+using MsmSolver;    
 using MsmSolver.Misc;
 using MsmSolver.Strategies;
 using Task = MsmSolver.Task;
 using System.Diagnostics;
 using MsmSolver.Strategies.Implementations;
+using CircleGenerator = MsmSolver.BaseClasses.CircleGenerator;
 
 
 
 namespace TestConsoleForEverything
 {
+
     class Program
     {
         static void Main(string[] args)
@@ -86,15 +88,30 @@ namespace TestConsoleForEverything
                //Console.WriteLine(sw.Elapsed.TotalMilliseconds);
                Console.ReadLine();*/
 
-              RunMultipleIterations();
-              Console.ReadLine();
+            //   RunMultipleIterations(args[0]);
+            //  Console.ReadLine();
 
-           // var z = new Task();
-           // StreamReader reader = new StreamReader("Zadacha 300x300.txt");
-           // z = new GTaskReader().ReadFromGFile(reader);
+            //   var z = new Task();
+            //   StreamReader reader = new StreamReader("Zadacha 300x300.txt");
+            //  z = new GTaskReader().ReadFromGFile(reader);
 
-           // Console.ReadLine();
+            //  Console.ReadLine();
 
+              RunMultipleIterations("Zadacha 300x300.txt");
+           /* var z = new CircleGenerator().taskGeneration();
+
+            var mathProvider = new CudaMathOperationsProvider();
+
+            var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
+                         new LastIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider)).SolveTask(z);
+
+            Console.WriteLine("Znachenie CF: " + answer.Z);
+            Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
+            Console.WriteLine("Znachenia Икзигов: " + answer.Solution);          
+            Console.ReadLine();*/
+
+             Console.ReadLine();
+                
         }
 
         private class SomeClass
@@ -110,7 +127,7 @@ namespace TestConsoleForEverything
             }
         }
 
-        private static void RunMultipleIterations()
+        private static void RunMultipleIterations(String args)
         {
             List<double> Jenia = new List<double>(5);
             int execCount = 1;
@@ -118,23 +135,25 @@ namespace TestConsoleForEverything
             var sw = Stopwatch.StartNew();
             for (int i = 0; i < execCount; i++)
             {
-                answer = ModularSolverCaller("Zadacha 300x300.txt");
+                answer = ModularSolverCaller(args);
                 Jenia.Add(sw.Elapsed.TotalMilliseconds);
                 sw.Stop();
                Console.WriteLine($"Iteration: {i} completed");
                 sw.Restart();
             }
-
+            Console.Clear();
             Console.WriteLine("Solution: " + answer.Solution);
-            Console.WriteLine("z: " + answer.Z);
+            Console.WriteLine("Znachenie CF: " + answer.Z);
             Console.WriteLine("Kol_vo shagov: " + answer.StepCount);
 
             Console.WriteLine("Execution Time:" + Jenia.Average() + "ms");
 
-            for ( int i = 0; i < answer.Basis.VectorIndexes.GetLength(0);i++)
-            {
-               Console.Write(answer.Basis.VectorIndexes[i] + " ");
-            }
+            Console.ReadLine();
+
+         //  for ( int i = 0; i < answer.Basis.VectorIndexes.GetLength(0);i++)
+         //   {
+           //    Console.Write(answer.Basis.VectorIndexes[i] + " ");
+          //  }
         }
 
    /*     private static void SolveWithSimpleSolver()
@@ -169,7 +188,7 @@ namespace TestConsoleForEverything
             var mathProvider = new CudaMathOperationsProvider();
 
             var answer = new ModularSolver(mathProvider, new FullParallelDeltasCalculator(mathProvider), new StraightVectorToBasisPutter(mathProvider),
-                         new FirstIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider)).SolveTask(z);
+                         new LastIncomingVectorFinder(), new MTaskBasisFinder(), new LexicographicalOutgoingVectorFinder(mathProvider)).SolveTask(z);
             return answer;
         }
     }

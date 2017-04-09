@@ -7,6 +7,16 @@
             //найдем минимум Хko/Xks и, т.о., выводимый вектор
             var outgoingVectorIdx = -1;
             double minimum = double.MaxValue;
+            //int counter = 0;
+
+           /* for (int i = 0; i < xs.Dimension; i++)
+            {
+                if (xs[i] <= 0)
+                    counter++;
+                if (counter == xs.Dimension)
+                    throw new System.Exception("CF not ogranichena");
+            }*/
+
             for (int k = 0; k < xs.Dimension; k++)
             {
                 if (xs[k] <= 0)
