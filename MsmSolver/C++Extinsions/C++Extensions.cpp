@@ -120,7 +120,8 @@ extern "C" _declspec ( dllexport ) const wchar_t* InitializeLibrary ()
 //	  for(int i = 0; i < b.extent[0]; i++)
 //		sum += a(row, i) * b(i, col);
 //	  c[idx] = sum;
-//	});
+//	});kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)
+       //kernel32.lib; user32.lib; gdi32.lib; winspool.lib; comdlg32.lib; advapi32.lib; shell32.lib; ole32.lib; oleaut32.lib; uuid.lib; odbc32.lib; odbccp32.lib; % (AdditionalDependencies)
 //	c.synchronize();
 //}
 

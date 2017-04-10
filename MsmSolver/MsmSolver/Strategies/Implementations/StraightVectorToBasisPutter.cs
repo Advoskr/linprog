@@ -5,6 +5,7 @@ namespace MsmSolver.Strategies
     public class StraightVectorToBasisPutter : IVectorToBasisPutter
     {
         private readonly IMathOperationsProvider _provider;
+        private const double eps = 1e-7d;
 
         public StraightVectorToBasisPutter(IMathOperationsProvider provider)
         {
@@ -15,6 +16,7 @@ namespace MsmSolver.Strategies
         private static Matrix E = null;
         private static int _numvivodold = 0;
         private static Vector _nullVector = null;
+        private static int counter = 0;
 
         public TaskSolvingData PutVectorIntoBasis(int incomingVectorIdx, int outgoingVectorIdx, Task task, TaskSolvingData data,
             Vector deltas, Vector xs)
@@ -47,12 +49,16 @@ namespace MsmSolver.Strategies
             _numvivodold = outgoingVectorIdx;
             var newBasisValues = _provider.Multiply(E,data.Basis.Values);
 
-
             Console.WriteLine(string.Format("Vvodim {0} vmesto {1}", incomingVectorIdx, data.Basis.VectorIndexes[outgoingVectorIdx]));
 
             newData.Basis.VectorIndexes = data.Basis.VectorIndexes;
             newData.Basis.VectorIndexes[outgoingVectorIdx] = incomingVectorIdx;
             newData.Basis.Values = newBasisValues;
+
+            //    var jenia = MatrixTest(newData, task);
+            var test = MatrixTest(newData, task);
+            if (test.Item1)
+                throw new Exception("ALARM VOLK UNES ZAICHAT");
 
             //  recalc solution vector
             newData.X0 = _provider.Multiply(newData.Basis.Values, task.A0);
@@ -62,6 +68,37 @@ namespace MsmSolver.Strategies
 
             return newData;
         }
+
+
+        public Tuple<bool,Matrix> MatrixTest(TaskSolvingData Newdata, Task Task)
+        {
+            var test = false;
+            var newData = Newdata;
+            var task = Task;
+
+            Matrix straightMatrix = new Matrix(newData.Basis.Values.RowCount, newData.Basis.Values.ColCount, Matrix.CreationVariant.IdentityMatrix);
+            for (int i = 0; i < straightMatrix.ColCount; i++)
+            {
+                straightMatrix.ChangeColumn(i, task.A.GetColumn(newData.Basis.VectorIndexes[i]));
+            }
+
+            var Jenia = _provider.Multiply(newData.Basis.Values, straightMatrix);
+
+            for (int i = 0; i < Jenia.RowCount; i++)
+            {
+                for (int j = 0; j < Jenia.ColCount; j++)
+                {
+                    if (i == j && Math.Abs(Jenia._values[i][j] - 1) > eps || i != j && Math.Abs(Jenia._values[i][j]) > eps)
+                    {
+                        test = true;
+                        return new Tuple<bool, Matrix>(test, straightMatrix);
+                    }
+                }
+            }
+            return new Tuple<bool, Matrix>(test, straightMatrix);
+        }
+
+
 
 
         public static Vector GetCbazis(Task task, Basis basis)

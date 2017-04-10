@@ -10,6 +10,9 @@ namespace MsmSolver
     public abstract class SolverBase
     {
         private readonly IAdditionalTaskHandler _handler;
+        private static bool changeCF = false;
+        private static int colvo_perem = 0;
+
         public IMathOperationsProvider MathOperationsProvider { get; private set; }
 
         public SolverBase(IMathOperationsProvider mathOperationsProvider, IAdditionalTaskHandler handler)
@@ -20,6 +23,7 @@ namespace MsmSolver
 
         public Answer SolveTask(Task task)
         {
+            colvo_perem = task.C.Dimension;
             var canonicalTask = MakeCanonicalForm(task);
             return SolveTaskInternal(canonicalTask);
         }
@@ -30,13 +34,14 @@ namespace MsmSolver
             //now we need to get basis from task
             bool JeniaProverka = false;
            
-            var getBasisResult = GetBasis(task);
+            var getBasisResult = GetBasis(task);    
 
             JeniaProverka = TestBasis(getBasisResult.Item2.Values);
             
             if (getBasisResult.Item1)
             {
                 Basis basis = getBasisResult.Item2;
+                basis = RightForm(basis);
                 return SolveWithBasis(task, basis);
             }
             else
@@ -49,6 +54,7 @@ namespace MsmSolver
 
         public Answer SolveWithBasis(Task canonicalTask, Basis basis)
         {
+            
             var x0 = FormX0(basis, canonicalTask);
             var lambda = CalculateLambdas(canonicalTask, basis);
 
@@ -62,7 +68,7 @@ namespace MsmSolver
             var result = SolveWithData(canonicalTask, solverData);
             return result;
         }
-
+            
         private bool TestBasis(Matrix matrix)
         {
             for (int i = 0; i < matrix.ColCount; i++)
@@ -92,6 +98,7 @@ namespace MsmSolver
         protected virtual Answer SolveWithData(Task task, TaskSolvingData data)
         {
             var result = new Answer();
+
             //bool jenia_Test = false; Проверка на ограниченность ЦФ
             TaskSolvingData newData = new TaskSolvingData();
             newData = data;
@@ -101,15 +108,15 @@ namespace MsmSolver
                 var canBeOptimized = GetCanBeOptimized(deltas);
                 if (!canBeOptimized)
                     break;
-
+                
 
                 var incomingVectorIdx = FindIncomingVector(deltas);
               
                 Vector xs;
-                //if (result.StepCount == 0)
-                //    xs = task.A.GetColumn(incomingVectorIdx);
-                //else
-                    xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
+               /* if (result.StepCount == 0)
+                    xs = task.A.GetColumn(incomingVectorIdx);
+                else
+                  */ xs = MathOperationsProvider.Multiply(newData.Basis.Values, task.A.GetColumn(incomingVectorIdx));
                 
           /*      for (int i = 0; i < xs.Dimension; i++)
                 {
@@ -136,12 +143,25 @@ namespace MsmSolver
                 {
                     Console.WriteLine(result.StepCount);
                     throw new Exception("Task have no solution");
-                }
+                }                                  
             }
             result.Basis = newData.Basis;
-            result.Solution = newData.X0;
+            result.Solution = new Vector(colvo_perem);
+           for (int i = 0; i < colvo_perem; i++)
+            {
+                for (int j = 0; j < result.Basis.VectorIndexes.Length; j++ )
+                {
+                    if (i == result.Basis.VectorIndexes[j])
+                    {
+                        result.Solution[i] = newData.X0[j];
+                        break;
+                    }
+                }
+            }
             result.SolvingMethod = GetSolvingMethodName();
             result.Z = CalculateZ(task, newData);
+            if (changeCF)
+                result.Z = -result.Z;
             return result;
         }
 
@@ -161,11 +181,15 @@ namespace MsmSolver
 
         protected Vector CalculateLambdas(Task task, Basis basis)
         {
+           //   Vector L = new Vector(basis.Values.ColCount);
+             // for (int i = 0; i < basis.VectorIndexes.Length; i++)
+             //// {
+              //    L[i] = task.C[basis.VectorIndexes[i]];
+             // }
+              //return L;
             Vector L = new Vector(basis.Values.ColCount);
-            for (int i = 0; i < basis.VectorIndexes.Length; i++)
-            {
-                L[i] = task.C[basis.VectorIndexes[i]];
-            }
+            L = MathOperationsProvider.Multiply(StraightVectorToBasisPutter.GetCbazis(task, basis), basis.Values);
+
             return L;
         }
 
@@ -174,6 +198,26 @@ namespace MsmSolver
             //TODO we don't find real components of X0, we just copy A0 as if our basis is E.
             Vector X0 = MathOperationsProvider.Multiply(basis.Values, task.A0);//Разложение А0 по B,Потом разберусь
             return X0;
+        }
+
+        protected Basis RightForm(Basis basis)
+        {
+            var b = new Basis();
+
+            b.Values = new Matrix(basis.Values.RowCount, basis.Values.ColCount, Matrix.CreationVariant.IdentityMatrix);
+            b.VectorIndexes = new int[basis.Values.RowCount];
+
+            for (int i = 0; i < basis.Values.RowCount; i++)
+            {
+                for (int j = 0; j < basis.Values.ColCount; j++)
+                {
+                    if (basis.Values[i][j] == 1)
+                    {
+                        b.VectorIndexes[i] = basis.VectorIndexes[j];
+                    }
+                }
+            }
+            return b;
         }
 
         protected Tuple<bool, Basis> GetBasis(Task task)
@@ -222,6 +266,29 @@ namespace MsmSolver
                 //else, we continue to check A matrix. 
 
             }
+
+
+           /*  if (indexesIdx == basis.VectorIndexes.Length)
+            {
+                for (int i = 0; i < basis.Values.ColCount; i++)
+                {
+                    if (basis.Values[i][i] == 0)
+                    {
+                        for (int j = 0; j < basis.Values.RowCount; j++)
+                        {
+                            if (basis.Values[i][j] == 1)
+                            {
+
+                            }
+                        }
+
+                    }
+                    else continue;
+                }
+                
+            }*/
+
+
 
             return new Tuple<bool, Basis>(indexesIdx == basis.VectorIndexes.Length, basis);
         }
@@ -302,6 +369,7 @@ namespace MsmSolver
             else
             {
                 result.Direction = (Direction)0;
+                changeCF = true;
                 for (int i = 0; i < task.A.ColCount + task.A.RowCount - counter; i++)
                 {
                     if (i <= task.A.ColCount)

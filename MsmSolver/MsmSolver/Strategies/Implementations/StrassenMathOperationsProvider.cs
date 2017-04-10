@@ -296,6 +296,5 @@ namespace MsmSolver.Strategies.Implementations
             //});
             //System.Threading.Tasks.Task.WaitAll(tasks2);
         }
-
     }
 }

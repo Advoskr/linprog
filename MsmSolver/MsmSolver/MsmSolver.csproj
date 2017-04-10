@@ -29,6 +29,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,20 +46,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseClasses\Answer.cs" />
-    <Compile Include="BaseClasses\ModularSolver.cs" />
-    <Compile Include="MathClasses\Basis.cs" />
-    <Compile Include="MathClasses\Direction.cs" />
-    <Compile Include="MathClasses\Signs.cs" />
+    <Compile Include="BaseClasses\CircleGenerator.cs" />
+    <Compile Include="Solvers\ModularSolver.cs" />
+    <Compile Include="BaseClasses\SecondGenerator.cs" />
+    <Compile Include="BaseClasses\MathClasses\Basis.cs" />
+    <Compile Include="BaseClasses\MathClasses\Direction.cs" />
+    <Compile Include="BaseClasses\MathClasses\Signs.cs" />
     <Compile Include="Misc\CoreExstensions.cs" />
-    <Compile Include="Misc\GTaskReader.cs" />
+    <Compile Include="BaseClasses\GTaskReader.cs" />
     <Compile Include="Misc\TaskReader.cs" />
     <Compile Include="Solvers\SimpleSolver.cs" />
     <Compile Include="BaseClasses\SolverBase.cs" />
-    <Compile Include="MathClasses\Matrix.cs" />
+    <Compile Include="BaseClasses\MathClasses\Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseClasses\Task.cs" />
     <Compile Include="BaseClasses\TaskSolvingStructure.cs" />
-    <Compile Include="MathClasses\Vector.cs" />
+    <Compile Include="BaseClasses\MathClasses\Vector.cs" />
     <Compile Include="Strategies\Implementations\AdditionalTaskBasisFinder.cs" />
     <Compile Include="Strategies\Implementations\SimpleDeltasCalculator.cs" />
     <Compile Include="Strategies\Implementations\MTaskBasisFinder.cs" />
